@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>Stallbuch Pro</title>
+<meta name="theme-color" content="#2F6B4F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Stallbuch Pro">
+<style>
+:root{
+  --bg:#F0F5EE;
+  --paper:#FFFFFF;
+  --primary:#2F6B4F;
+  --primary-dark:#21513B;
+  --primary-light:#E3F0E8;
+  --accent:#E07A5F;
+  --accent-dark:#C95F45;
+  --accent-light:#FBE7E1;
+  --gold:#D4940A;
+  --gold-light:#FEF3D7;
+  --ink:#1A2620;
+  --muted:#6E8478;
+  --border:#D4E2CF;
+  --danger:#C24B3D;
+  --danger-light:#FBE3DE;
+  --warning:#D97706;
+  --warning-light:#FEF3CD;
+  --success:#2F6B4F;
+  --success-light:#E3F0E8;
+  --radius:14px;
+  --shadow:0 2px 12px rgba(33,81,59,.10);
+  --shadow-md:0 4px 20px rgba(33,81,59,.15);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{background:var(--bg); color:var(--ink); font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:Georgia,'Times New Roman',serif; margin:0; color:var(--primary-dark);}
+button,input,select,textarea{font-family:inherit;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+/* HEADER */
+.app-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); position:sticky; top:0; z-index:30; box-shadow:0 2px 16px rgba(33,81,59,.3);}
+.header-inner{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px 8px; max-width:1200px; margin:0 auto; flex-wrap:wrap;}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-icon{font-size:1.9rem;}
+.brand h1{font-size:1.4rem; color:#fff; letter-spacing:.2px;}
+.tagline{margin:0; font-size:.74rem; color:rgba(255,255,255,.75); font-style:italic;}
+.header-right{display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
+.lang-switch{display:flex; gap:4px;}
+.lang-btn{background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.4); border-radius:7px; padding:4px 9px; font-size:.7rem; font-weight:700; cursor:pointer; letter-spacing:.3px;}
+.lang-btn:hover{background:rgba(255,255,255,.28);}
+.lang-btn.active{background:#fff; color:var(--primary-dark); border-color:#fff;}
+.header-row2{display:flex; align-items:center; gap:8px;}
+.save-ind{font-size:.72rem; color:var(--primary-dark); background:#fff; padding:3px 10px; border-radius:12px; opacity:0; transition:opacity .4s; font-weight:600;}
+.save-ind.show{opacity:1;}
+.logout-btn{background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.4); border-radius:7px; padding:5px 12px; font-size:.78rem; font-weight:700; cursor:pointer; white-space:nowrap;}
+.logout-btn:hover{background:rgba(255,255,255,.28);}
+.tab-nav{display:flex; gap:3px; overflow-x:auto; padding:6px 16px 10px; max-width:1200px; margin:0 auto; scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.nav-btn{display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,.12); border:none; padding:8px 13px; border-radius:10px; font-size:.83rem; white-space:nowrap; color:rgba(255,255,255,.85); cursor:pointer;}
+.nav-btn.active{background:#fff; color:var(--primary-dark); font-weight:700;}
+.nav-btn:hover:not(.active){background:rgba(255,255,255,.22);}
+
+/* MAIN */
+main{max-width:1200px; margin:0 auto; padding:22px 16px 80px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block; animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+/* PANELS */
+.panel-header{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:18px;}
+.panel-header h2{font-size:1.3rem;}
+.toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+
+/* BUTTONS */
+.btn{background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-size:.88rem; font-weight:700; cursor:pointer; box-shadow:0 3px 8px rgba(224,122,95,.3); white-space:nowrap;}
+.btn:hover{background:var(--accent-dark);}
+.btn:active{transform:scale(.97);}
+.btn.green{background:var(--primary); box-shadow:0 3px 8px rgba(33,81,59,.25);}
+.btn.green:hover{background:var(--primary-dark);}
+.btn.secondary{background:#fff; color:var(--primary-dark); border:1.5px solid var(--border); box-shadow:none;}
+.btn.secondary:hover{background:var(--primary-light);}
+.btn.danger{background:var(--danger); box-shadow:0 3px 8px rgba(194,75,61,.25);}
+.btn.danger:hover{background:#a23b2f;}
+.btn.sm{padding:7px 12px; font-size:.8rem;}
+.btn.icon-btn{padding:8px; border-radius:9px; background:#fff; color:var(--ink); border:1.5px solid var(--border); box-shadow:none; font-size:1rem;}
+.btn.icon-btn:hover{background:var(--primary-light);}
+.btn.icon-btn.red:hover{background:var(--danger-light); border-color:var(--danger);}
+
+/* SEARCH */
+.search-wrap{position:relative;}
+.search-wrap input{padding:9px 12px 9px 34px; border:1.5px solid var(--border); border-radius:10px; background:#fff; font-size:.88rem; min-width:200px; width:100%;}
+.search-wrap::before{content:'🔍'; position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:.85rem;}
+
+/* STAT CARDS */
+.stat-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:22px;}
+@media(max-width:900px){.stat-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:500px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-card{background:var(--paper); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
+.stat-card::before{content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--accent);}
+.stat-card.green::before{background:var(--primary);}
+.stat-card.gold::before{background:var(--gold);}
+.stat-card.red::before{background:var(--danger);}
+.stat-num{font-family:Georgia,serif; font-size:2rem; color:var(--primary-dark); line-height:1; font-weight:bold;}
+.stat-label{font-size:.78rem; color:var(--muted); margin-top:4px;}
+.stat-icon{font-size:1.5rem; position:absolute; top:12px; right:14px; opacity:.25;}
+
+/* ALERT BOXES */
+.reminder-box{background:var(--paper); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:18px; box-shadow:var(--shadow);}
+.reminder-box h3{font-size:1rem; margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+.alert-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--bg); flex-wrap:wrap;}
+.alert-row:last-child{border-bottom:none;}
+.alert-name{font-weight:600; font-size:.9rem;}
+.alert-sub{font-size:.78rem; color:var(--muted);}
+.chip{display:inline-flex; align-items:center; gap:4px; font-size:.73rem; padding:3px 9px; border-radius:10px; font-weight:700; white-space:nowrap;}
+.chip.red{background:var(--danger-light); color:var(--danger);}
+.chip.gold{background:var(--gold-light); color:var(--gold);}
+.chip.green{background:var(--success-light); color:var(--success);}
+.chip.gray{background:#EFEFEF; color:#666;}
+.chip.blue{background:#E0ECFB; color:#1D5EA6;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--paper); box-shadow:var(--shadow);}
+table{width:100%; border-collapse:collapse; font-size:.86rem;}
+th{text-align:left; padding:11px 13px; background:var(--primary-light); color:var(--primary-dark); font-size:.72rem; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;}
+td{padding:10px 13px; border-top:1px solid var(--bg); vertical-align:middle;}
+tr:hover td{background:#FAFCF8;}
+.muted{color:var(--muted); font-size:.83rem;}
+
+/* MOBILE CARDS */
+.card-list{display:none; flex-direction:column; gap:12px;}
+@media(max-width:680px){
+  .table-wrap{display:none;}
+  .card-list{display:flex;}
+  #tab-milch .table-wrap{display:block; overflow-x:auto;}
+}
+.animal-card{background:var(--paper); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);}
+.animal-card-header{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:8px;}
+.animal-card-name{font-size:1.05rem; font-weight:700; color:var(--primary-dark);}
+.animal-card-body{display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:.83rem; margin-bottom:10px;}
+.animal-card-body .lbl{color:var(--muted); font-size:.74rem;}
+.animal-card-actions{display:flex; gap:8px; flex-wrap:wrap;}
+
+/* STAMMBAUM */
+.stammbaum{display:flex; flex-direction:column; gap:14px; align-items:center; margin:10px 0;}
+.stb-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+.stb-box{background:var(--bg); border:1.5px solid var(--border); border-radius:10px; padding:10px 14px; font-size:.88rem; min-width:150px; text-align:center;}
+.stb-self{background:var(--primary); color:#fff; font-weight:700; border:none;}
+.stb-sub{font-size:.75rem; color:var(--muted); margin-top:6px; line-height:1.5;}
+.stb-note{font-size:.72rem; color:var(--muted); margin-top:6px;}
+
+/* EAR TAG */
+.eartag{display:inline-flex; align-items:center; background:var(--primary-light); border:1.5px solid var(--primary); border-radius:3px 10px 10px 3px; padding:2px 8px 2px 11px; font-family:Georgia,serif; font-weight:700; font-size:.8rem; color:var(--primary-dark); position:relative;}
+.eartag::before{content:''; position:absolute; left:4px; top:50%; width:4px; height:4px; border-radius:50%; background:#fff; border:1px solid var(--primary-dark); transform:translateY(-50%);}
+
+/* STATUS CHIPS */
+.s-aktiv{background:var(--success-light); color:var(--success);}
+.s-traechtig{background:var(--gold-light); color:var(--gold);}
+.s-trocken{background:#EDE7F6; color:#6B4E9A;}
+.s-verkauft{background:#EFEFEF; color:#777;}
+.s-warte{background:var(--accent-light); color:var(--accent-dark);}
+
+/* MODAL */
+.overlay{display:none; position:fixed; inset:0; background:rgba(10,20,15,.55); z-index:50; align-items:flex-start; justify-content:center; padding:24px 14px; overflow-y:auto;}
+.overlay.show{display:flex;}
+.modal{background:var(--paper); border-radius:18px; max-width:560px; width:100%; padding:26px; position:relative; box-shadow:0 24px 60px rgba(0,0,0,.3); margin:auto;}
+.modal-close{position:absolute; top:14px; right:14px; background:none; border:none; font-size:1.1rem; cursor:pointer; color:var(--muted); padding:4px 8px; border-radius:8px;}
+.modal-close:hover{background:var(--bg);}
+.modal h2{font-size:1.18rem; margin-bottom:18px;}
+
+/* FORM */
+.fg{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media(max-width:480px){.fg{grid-template-columns:1fr;}}
+.ff{display:flex; flex-direction:column; gap:4px;}
+.ff.full{grid-column:1/-1;}
+.ff label{font-size:.76rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.3px;}
+.ff input,.ff select,.ff textarea{padding:10px 11px; border:1.5px solid var(--border); border-radius:9px; font-size:.9rem; background:var(--bg); transition:border-color .15s;}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--primary); background:#fff; outline:none;}
+.ff textarea{resize:vertical; min-height:56px;}
+.hint{font-size:.75rem; color:var(--muted); margin:0 0 8px; line-height:1.5;}
+.fa{display:flex; justify-content:flex-end; gap:10px; margin-top:16px;}
+.divider{height:1px; background:var(--border); margin:16px 0;}
+.section-sub{font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); margin:14px 0 8px;}
+
+/* INFO BOXES */
+.info-box{background:var(--gold-light); border:1px solid #F0C96B; border-radius:12px; padding:14px 16px; font-size:.84rem; color:#7a5417; margin-bottom:16px; line-height:1.55; display:flex; gap:10px;}
+.info-box.danger{background:var(--danger-light); border-color:var(--danger); color:var(--danger);}
+.info-box.green{background:var(--success-light); border-color:var(--primary); color:var(--primary-dark);}
+
+/* MOBILE NAV */
+@media(max-width:680px){
+  .tab-nav{position:fixed; bottom:0; left:0; right:0; background:var(--paper); border-top:1px solid var(--border); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); justify-content:space-around; box-shadow:0 -4px 20px rgba(0,0,0,.1); z-index:40; max-width:100%; margin:0;}
+  .nav-btn{flex-direction:column; gap:1px; font-size:.6rem; padding:5px 3px; border-radius:10px; flex:1; color:var(--muted); background:transparent;}
+  .nav-icon{font-size:1.2rem;}
+  .nav-btn.active{background:var(--primary-light); color:var(--primary-dark);}
+  main{padding-bottom:90px;}
+}
+
+/* DATA TAB */
+.data-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media(max-width:560px){.data-grid{grid-template-columns:1fr;}}
+.data-card{background:var(--paper); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);}
+.data-card h3{font-size:1rem; margin-bottom:8px;}
+.data-card p{font-size:.83rem; color:var(--muted); margin:0 0 14px; line-height:1.5;}
+
+/* SETTINGS */
+.setting-row{display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--bg);}
+.setting-row:last-child{border-bottom:none;}
+.setting-label{font-weight:600; font-size:.9rem;}
+.setting-sub{font-size:.78rem; color:var(--muted); margin-top:2px;}
+.setting-row input[type=number]{width:80px; padding:7px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:.9rem; text-align:center;}
+
+footer.af{text-align:center; padding:20px; font-size:.73rem; color:var(--muted);}
+
+/* PRINT */
+#print-area{display:none;}
+@media print{
+  body *{visibility:hidden;}
+  #print-area,#print-area *{visibility:visible;}
+  #print-area{display:block; position:absolute; left:0; top:0; width:100%; padding:28px; font-family:Arial,sans-serif;}
+  .ph1{font-size:1.5rem; margin-bottom:2px; color:#000;}
+  .ph2{color:#555; font-size:.85rem; margin:0 0 20px;}
+  .ps{font-size:1.05rem; margin:18px 0 8px; color:#000; border-bottom:1px solid #ccc; padding-bottom:4px;}
+  .pt{width:100%; border-collapse:collapse; margin-bottom:8px;}
+  .pt th,.pt td{border:1px solid #bbb; padding:6px 10px; font-size:12px; text-align:left;}
+  .pt th{background:#f0f0f0;}
+}
+
+/* LOCK SCREEN */
+.lock-overlay{position:fixed; inset:0; background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px;}
+.lock-overlay.hide{display:none;}
+.lock-box{background:#fff; border-radius:18px; padding:32px 28px; max-width:360px; width:100%; box-shadow:0 24px 60px rgba(0,0,0,.35); text-align:center;}
+.lock-icon{font-size:2.4rem; margin-bottom:6px;}
+.lock-box h2{margin-bottom:4px;}
+.lock-sub{font-size:.85rem; color:var(--muted); margin:0 0 14px;}
+.lock-lang{display:flex; gap:5px; justify-content:center; margin-bottom:14px;}
+.lock-box input{width:100%; padding:11px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:.95rem; margin-bottom:10px; background:var(--bg);}
+.lock-box input:focus{outline:none; border-color:var(--primary); background:#fff;}
+.lock-err{color:var(--danger); font-size:.8rem; min-height:16px; margin-bottom:2px;}
+.lock-hint{font-size:.72rem; color:var(--muted); margin-top:16px; line-height:1.5;}
+
+/* MILK / FEED */
+.cow-summary-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; margin-bottom:20px;}
+.cow-sum-card{background:var(--paper); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);}
+.cow-sum-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+.cow-sum-name{font-weight:700; color:var(--primary-dark); font-size:1rem;}
+.cow-sum-rows{display:flex; flex-direction:column; gap:6px; font-size:.82rem; margin-bottom:10px;}
+.cow-sum-rows div{display:flex; justify-content:space-between;}
+.cow-sum-rows .lbl{color:var(--muted);}
+.trend{font-weight:700; font-size:.78rem; padding:2px 8px; border-radius:8px;}
+.trend.up{background:var(--success-light); color:var(--success);}
+.trend.down{background:var(--danger-light); color:var(--danger);}
+.trend.flat{background:#EFEFEF; color:#777;}
+.sparkline{width:100%; height:36px; display:block; margin-top:6px;}
+</style>
+</head>
+<body>
+
+<div class="lock-overlay" id="lock-overlay">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2 data-i18n="appTitle">Stallbuch Pro</h2>
+    <div class="lock-lang">
+      <button class="lang-btn" data-lang="so" onclick="setLang('so')">SO</button>
+      <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+    <p class="lock-sub" id="lock-sub">Bitte Passwort eingeben</p>
+    <form id="lock-form" onsubmit="return handleLockSubmit(event)">
+      <input type="password" id="lock-pw" data-i18n-ph="lockPwPh" placeholder="Passwort" autocomplete="current-password" required>
+      <input type="password" id="lock-pw2" data-i18n-ph="lockPwPh2" placeholder="Passwort wiederholen" autocomplete="new-password" style="display:none">
+      <div class="lock-err" id="lock-err"></div>
+      <button type="submit" class="btn green" style="width:100%; margin-top:4px;" data-i18n="lockBtn">Weiter</button>
+    </form>
+    <p class="lock-hint" data-i18n="lockHint">Das Passwort wird nur in diesem Browser gespeichert – kein Server, keine Installation nötig. Änderbar im Tab „Daten".</p>
+  </div>
+</div>
+
+<div id="app-root" style="display:none">
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-icon">🐮</span>
+      <div>
+        <h1 data-i18n="appTitle">Stallbuch Pro</h1>
+        <p class="tagline" data-i18n="appTagline">Professionelle Rinderfarm-Verwaltung</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="so" onclick="setLang('so')">SO</button>
+        <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      </div>
+      <div class="header-row2">
+        <div id="save-ind" class="save-ind" data-i18n="saved">Gespeichert ✓</div>
+        <button class="logout-btn" id="logout-btn" onclick="lockApp()" title="Logout">🔒 <span data-i18n="logoutBtn">Abmelden</span></button>
+      </div>
+    </div>
+  </div>
+  <nav class="tab-nav">
+    <button class="nav-btn active" id="nav-dash" onclick="showTab('dash')"><span class="nav-icon">📋</span><span data-i18n="navDash">Übersicht</span></button>
+    <button class="nav-btn" id="nav-kuehe" onclick="showTab('kuehe')"><span class="nav-icon">🐄</span><span data-i18n="navKuehe">Kühe</span></button>
+    <button class="nav-btn" id="nav-kaelber" onclick="showTab('kaelber')"><span class="nav-icon">🐮</span><span data-i18n="navKaelber">Kälber</span></button>
+    <button class="nav-btn" id="nav-bullen" onclick="showTab('bullen')"><span class="nav-icon">🐂</span><span data-i18n="navBullen">Bullen</span></button>
+    <button class="nav-btn" id="nav-bes" onclick="showTab('bes')"><span class="nav-icon">💉</span><span data-i18n="navBes">Besamung</span></button>
+    <button class="nav-btn" id="nav-brunst" onclick="showTab('brunst')"><span class="nav-icon">📅</span><span data-i18n="navBrunst">Brunst</span></button>
+    <button class="nav-btn" id="nav-health" onclick="showTab('health')"><span class="nav-icon">🏥</span><span data-i18n="navHealth">Gesundheit</span></button>
+    <button class="nav-btn" id="nav-milch" onclick="showTab('milch')"><span class="nav-icon">🥛</span><span data-i18n="navMilch">Milch &amp; Futter</span></button>
+    <button class="nav-btn" id="nav-ergaenzung" onclick="showTab('ergaenzung')"><span class="nav-icon">💊</span><span data-i18n="navErgaenzung">Ergänzung</span></button>
+    <button class="nav-btn" id="nav-einkauf" onclick="showTab('einkauf')"><span class="nav-icon">🛒</span><span data-i18n="navEinkauf">Einkäufe</span></button>
+    <button class="nav-btn" id="nav-finanzen" onclick="showTab('finanzen')"><span class="nav-icon">💰</span><span data-i18n="navFinanzen">Finanzen</span></button>
+    <button class="nav-btn" id="nav-daten" onclick="showTab('daten')"><span class="nav-icon">💾</span><span data-i18n="navDaten">Daten</span></button>
+  </nav>
+</header>
+
+<main>
+
+<!-- DASHBOARD -->
+<section class="tab-panel active" id="tab-dash">
+  <div class="panel-header"><h2 data-i18n="dashTitle">Übersicht</h2></div>
+  <div class="stat-grid" id="stat-grid"></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    <div>
+      <div class="reminder-box"><h3>🐄 <span data-i18n="upcomingCalv">Anstehende Kalbungen</span></h3><div id="upcoming-calv"></div></div>
+      <div class="reminder-box"><h3>⏳ <span data-i18n="waitingBes">Wartezeit nach Kalbung</span></h3><div id="waiting-bes"></div></div>
+      <div class="reminder-box"><h3>🌵 <span data-i18n="dryOffTitle">Trockenstellen</span></h3><div id="dry-off"></div></div>
+    </div>
+    <div>
+      <div class="reminder-box"><h3>📅 <span data-i18n="upcomingHeat">Brunst (nächste 7 Tage)</span></h3><div id="upcoming-heat"></div></div>
+      <div class="reminder-box"><h3>🏥 <span data-i18n="recentHealth">Letzte Behandlungen</span></h3><div id="recent-health"></div></div>
+      <div class="reminder-box"><h3>💊 <span data-i18n="ergaenzungDueTitle">Ergänzung fällig</span></h3><div id="ergaenzung-due"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- KÜHE -->
+<section class="tab-panel" id="tab-kuehe">
+  <div class="panel-header">
+    <h2 data-i18n="kueheTitle">Kühe</h2>
+    <div class="toolbar">
+      <div class="search-wrap"><input type="text" id="kuh-search" data-i18n-ph="searchPh" placeholder="Name oder Nummer suchen…" oninput="renderKuehe()"></div>
+      <button class="btn" onclick="openKuhForm()">➕ <span data-i18n="addKuh">Kuh hinzufügen</span></button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th data-i18n="thName">Name</th><th data-i18n="thNr">Nr.</th><th data-i18n="thRasse">Rasse</th><th data-i18n="thGeb">Geburtsdatum</th><th data-i18n="thLakt">Lakt.</th><th data-i18n="thGewicht">Gewicht</th><th data-i18n="thStatus">Status</th><th></th>
+      </tr></thead>
+      <tbody id="kuehe-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="kuehe-cards"></div>
+</section>
+
+<!-- KÄLBER -->
+<section class="tab-panel" id="tab-kaelber">
+  <div class="panel-header">
+    <h2 data-i18n="kaelberTitle">Kälber</h2>
+    <button class="btn" onclick="openKalbForm()">➕ <span data-i18n="addKalb">Kalb hinzufügen</span></button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th data-i18n="thName">Name</th><th data-i18n="thNr">Nr.</th><th data-i18n="thMutter">Mutter</th><th data-i18n="thVater">Vater</th><th data-i18n="thGeb">Geburtsdatum</th><th data-i18n="thAlter">Alter</th><th data-i18n="thGewicht">Gewicht</th><th data-i18n="thGeschlecht">Geschlecht</th><th></th>
+      </tr></thead>
+      <tbody id="kaelber-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="kaelber-cards"></div>
+</section>
+
+<!-- BULLEN -->
+<section class="tab-panel" id="tab-bullen">
+  <div class="panel-header">
+    <h2 data-i18n="bullenTitle">Bullen</h2>
+    <button class="btn" onclick="openBulleForm()">➕ <span data-i18n="addBulle">Bulle hinzufügen</span></button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thName">Name</th><th data-i18n="thNr">Nr.</th><th data-i18n="thRasse">Rasse</th><th data-i18n="thNotizen">Notizen</th><th></th></tr></thead>
+      <tbody id="bullen-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="bullen-cards"></div>
+</section>
+
+<!-- BESAMUNG -->
+<section class="tab-panel" id="tab-bes">
+  <div class="panel-header">
+    <h2 data-i18n="besTitle">Besamung &amp; Trächtigkeit</h2>
+    <button class="btn" onclick="openBesForm()">➕ <span data-i18n="addBes">Besamung eintragen</span></button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thKuh">Kuh</th><th data-i18n="thBulle">Bulle</th><th data-i18n="thDatum">Datum</th><th data-i18n="thStatus">Status</th><th data-i18n="thErwKalb">Erw. Kalbetermin</th><th></th></tr></thead>
+      <tbody id="bes-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="bes-cards"></div>
+</section>
+
+<!-- BRUNST -->
+<section class="tab-panel" id="tab-brunst">
+  <div class="panel-header">
+    <h2 data-i18n="brunstTitle">Brunstkalender</h2>
+    <button class="btn" onclick="openBrunstForm()">➕ <span data-i18n="addBrunst">Brunst eintragen</span></button>
+  </div>
+  <div class="reminder-box">
+    <h3>🔮 <span data-i18n="forecastTitle">Vorhersage – nächste Brunst</span></h3>
+    <div id="brunst-forecast"></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thKuh">Kuh</th><th data-i18n="thDatumBeo">Datum beobachtet</th><th data-i18n="thNotizen">Notizen</th><th data-i18n="thBesStatus">Besamung</th><th></th></tr></thead>
+      <tbody id="brunst-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="brunst-cards"></div>
+</section>
+
+<!-- GESUNDHEIT -->
+<section class="tab-panel" id="tab-health">
+  <div class="panel-header">
+    <h2 data-i18n="healthTitle">Gesundheit &amp; Behandlungen</h2>
+    <button class="btn" onclick="openHealthForm()">➕ <span data-i18n="addHealth">Behandlung eintragen</span></button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thTier">Tier</th><th data-i18n="thDatum">Datum</th><th data-i18n="thDiagnose">Diagnose / Behandlung</th><th data-i18n="thMedikament">Medikament</th><th data-i18n="thTierarzt">Tierarzt</th><th data-i18n="thNaechster">Nächster Termin</th><th></th></tr></thead>
+      <tbody id="health-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="health-cards"></div>
+</section>
+
+<!-- MILCH -->
+<section class="tab-panel" id="tab-milch">
+  <div class="panel-header">
+    <h2 data-i18n="milchTitle">Milch</h2>
+    <button class="btn" onclick="openMilchrateForm()">➕ <span data-i18n="addMilchrate">Zeitraum hinzufügen</span></button>
+  </div>
+  <div class="info-box green">
+    🔄 <span data-i18n="milchrateInfo">Trage pro Kuh einen Zeitraum ein, in dem sie konstant die gleiche Milchmenge pro Tag gibt (z.B. von 01.03. bis 15.04. jeden Tag 18 kg). Lässt du „Bis" leer, gilt die Menge bis auf Weiteres. Ein tägliches Eintragen ist nicht nötig – die App rechnet automatisch jeden Tag damit weiter.</span>
+  </div>
+  <div class="table-wrap" style="margin-bottom:22px;">
+    <table>
+      <thead><tr><th data-i18n="thKuh">Kuh</th><th data-i18n="thKgProTag">kg/Tag</th><th data-i18n="thVon">Von</th><th data-i18n="thBis">Bis</th><th></th></tr></thead>
+      <tbody id="milchrate-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="cow-summary-grid" id="milk-summary"></div>
+</section>
+
+<!-- ERGÄNZUNG (Mineralien & Getreide) -->
+<section class="tab-panel" id="tab-ergaenzung">
+  <div class="panel-header">
+    <h2 data-i18n="ergaenzungTitle">Ergänzung (Mineralien &amp; Getreide)</h2>
+    <button class="btn" onclick="openErgaenzungForm()">➕ <span data-i18n="addErgaenzung">Ergänzung eintragen</span></button>
+  </div>
+  <div class="info-box green">
+    💊 <span data-i18n="ergaenzungInfo">Trage Mineralien oder Getreide je Tier ein: Menge, Startdatum, wie viele Tage gegeben und wie viele Tage Pause. Die App berechnet automatisch, ob aktuell Gabe oder Pause ist und wann es weitergeht.</span>
+  </div>
+  <div class="info-box">
+    📋 <span data-i18n="ergaenzungEmpfehlung">Empfehlung: Laktierende Kühe – 250 ml Kalkwasser (Calcium) + 1 kg Weizenkleie pro Kuh/Tag. Trächtige Kühe – ebenso 250 ml Kalkwasser + 1 kg Weizenkleie, bis 6 Wochen vor dem Kalbetermin, dann Pause während der Trockenstehzeit, danach sofort nach dem Kalben wieder Kalkwasser geben. Kälber – 100 ml Kalkwasser (Calcium) + 0,3 kg Weizenkleie (Phosphor) pro Kalb/Tag. Über die Schnellauswahl unten im Formular kannst du diese Werte automatisch übernehmen.</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thTier">Tier</th><th data-i18n="thErgArt">Art</th><th data-i18n="thErgName">Bezeichnung</th><th data-i18n="thErgMenge">Menge</th><th data-i18n="thErgStart">Start</th><th data-i18n="thErgDauerPause">Gabe/Pause (Tage)</th><th data-i18n="thErgStatus">Status</th><th></th></tr></thead>
+      <tbody id="ergaenzung-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card-list" id="ergaenzung-cards"></div>
+</section>
+
+<!-- EINKÄUFE -->
+<section class="tab-panel" id="tab-einkauf">
+  <div class="panel-header">
+    <h2 data-i18n="einkaufTitle">Einkäufe</h2>
+    <button class="btn" onclick="openEinkaufForm()">➕ <span data-i18n="addEinkauf">Einkauf eintragen</span></button>
+  </div>
+
+  <div class="panel-header"><h3 style="margin:0">💲 <span data-i18n="futterpreisTitle">Futterpreise (aktuell)</span></h3>
+    <button class="btn secondary sm" onclick="openFutterpreisForm()">➕ <span data-i18n="addFutterpreis">Preis festlegen</span></button>
+  </div>
+  <div class="info-box">
+    💲 <span data-i18n="futterpreisInfo">Lege pro Artikel (z.B. Heu, Getreide) den aktuellen Preis pro Einheit fest. Beim Eintragen eines Einkaufs wird der Preis automatisch vorausgefüllt. Steigt der Preis, trage einfach den neuen Preis ein – ältere Einkäufe bleiben unverändert.</span>
+  </div>
+  <div class="table-wrap" style="margin-bottom:22px;">
+    <table>
+      <thead><tr><th data-i18n="thArtikel">Artikel</th><th data-i18n="thPreisEinheit">Preis/Einheit</th><th data-i18n="thSeit">Seit</th><th></th></tr></thead>
+      <tbody id="futterpreis-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="stat-grid" id="einkauf-summary" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thDatum">Datum</th><th data-i18n="thArtikel">Artikel</th><th data-i18n="thMenge">Menge</th><th data-i18n="thEinheit">Einheit</th><th data-i18n="thPreis">Preis</th><th data-i18n="thPreisEinheit">Preis/Einheit</th><th></th></tr></thead>
+      <tbody id="einkauf-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FINANZEN -->
+<section class="tab-panel" id="tab-finanzen">
+  <div class="panel-header">
+    <h2 data-i18n="finanzenTitle">Finanzen</h2>
+    <button class="btn" onclick="openFinanzForm()">➕ <span data-i18n="addFinanz">Buchung eintragen</span></button>
+  </div>
+  <div class="info-box green">
+    💰 <span data-i18n="finanzenInfo">Trage Einnahmen (z.B. Tierverkauf) und Ausgaben (z.B. Mitarbeiterkosten, Reparaturen) ein. Der Milchverkauf wird automatisch aus der täglichen Milchmenge berechnet, Futter- und Ergänzungs-Einkäufe aus dem Tab „Einkäufe" werden automatisch als Ausgaben mitgerechnet.</span>
+  </div>
+  <div class="stat-grid" id="finanzen-summary"></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:22px;">
+    <div class="reminder-box">
+      <h3>📉 <span data-i18n="chartAusgaben">Ausgaben nach Kategorie</span></h3>
+      <div id="chart-ausgaben"></div>
+    </div>
+    <div class="reminder-box">
+      <h3>📈 <span data-i18n="chartEinnahmen">Einnahmen nach Kategorie</span></h3>
+      <div id="chart-einnahmen"></div>
+    </div>
+  </div>
+
+  <div class="reminder-box" style="margin-bottom:22px;">
+    <h3>📅 <span data-i18n="monatTitle">Monatsübersicht</span></h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th data-i18n="thMonat">Monat</th><th data-i18n="thEinnahmenKurz">Einnahmen</th><th data-i18n="thAusgabenKurz">Ausgaben</th><th data-i18n="thGewinn">Gewinn/Verlust</th></tr></thead>
+        <tbody id="monat-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel-header"><h3 style="margin:0">📌 <span data-i18n="fixkostenTitle">Fixkosten (wiederkehrend)</span></h3>
+    <button class="btn secondary sm" onclick="openFixkostenForm()">➕ <span data-i18n="addFixkosten">Fixkosten festlegen</span></button>
+  </div>
+  <div class="info-box">
+    📌 <span data-i18n="fixkostenInfo">Für Kosten, die jeden Monat gleich bleiben (z.B. Mitarbeitergehalt). Einmal eintragen – die App rechnet automatisch jeden Monat weiter, bis du einen neuen Betrag einträgst.</span>
+  </div>
+  <div class="table-wrap" style="margin-bottom:22px;">
+    <table>
+      <thead><tr><th data-i18n="thKategorie">Kategorie</th><th data-i18n="thBetragProMonat">Betrag/Monat</th><th data-i18n="thSeitMonat">Seit</th><th></th></tr></thead>
+      <tbody id="fixkosten-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="panel-header"><h3 style="margin:0">🥛 <span data-i18n="milchverkaufTitle">Täglicher Milchverkauf</span></h3></div>
+  <div class="info-box green">
+    🥛 <span data-i18n="milchverkaufInfo">Wird automatisch aus der täglichen Milchmenge (Tab „Milch &amp; Futter") und dem Milchpreis (Einstellungen) berechnet. War es an einem Tag mehr oder weniger, kannst du den Betrag mit ✏️ manuell anpassen.</span>
+  </div>
+  <div class="table-wrap" style="margin-bottom:22px;">
+    <table>
+      <thead><tr><th data-i18n="thDatum">Datum</th><th data-i18n="thMilchmenge">Menge (kg)</th><th data-i18n="thBerechnet">Berechnet</th><th data-i18n="thTatsaechlich">Tatsächlich</th><th></th></tr></thead>
+      <tbody id="milchverkauf-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="panel-header"><h3 style="margin:0" data-i18n="buchungenTitle">Manuelle Buchungen</h3></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th data-i18n="thDatum">Datum</th><th data-i18n="thTyp">Typ</th><th data-i18n="thKategorie">Kategorie</th><th data-i18n="thBeschreibung">Beschreibung</th><th data-i18n="thBetrag">Betrag</th><th></th></tr></thead>
+      <tbody id="finanzen-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- DATEN -->
+<section class="tab-panel" id="tab-daten">
+  <div class="panel-header"><h2 data-i18n="datenTitle">Daten &amp; Einstellungen</h2></div>
+  <div class="data-grid">
+    <div class="data-card">
+      <h3>💾 <span data-i18n="exportTitle">Export / Import</span></h3>
+      <p data-i18n="exportInfo">Sichere deine Daten regelmäßig als JSON-Datei.</p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn green" onclick="exportData()">⬇️ <span data-i18n="exportBtn">Daten exportieren (.json)</span></button>
+        <button class="btn secondary" onclick="document.getElementById('import-input').click()">⬆️ <span data-i18n="importBtn">Daten importieren</span></button>
+      </div>
+    </div>
+    <div class="data-card">
+      <h3>⚙️ <span data-i18n="settingsTitle">Einstellungen</span></h3>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label" data-i18n="settingWaitLabel">Wartezeit nach Kalbung</div>
+          <div class="setting-sub" data-i18n="settingWaitSub">Tage bis zur nächsten Besamung (Standard: 42)</div>
+        </div>
+        <input type="number" id="setting-wait" min="1" max="365" value="42" onchange="saveSetting('waitDays', this.value)">
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label" data-i18n="settingCycleLabel">Brunstzyklus</div>
+          <div class="setting-sub" data-i18n="settingCycleSub">Tage (Standard: 21)</div>
+        </div>
+        <input type="number" id="setting-cycle" min="1" max="60" value="21" onchange="saveSetting('cycleDays', this.value)">
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label" data-i18n="settingDryLabel">Trockenstehzeit vor Kalbung</div>
+          <div class="setting-sub" data-i18n="settingDrySub">Tage vor dem Kalbetermin (Standard: 60)</div>
+        </div>
+        <input type="number" id="setting-dry" min="1" max="120" value="60" onchange="saveSetting('dryOffDays', this.value)">
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label" data-i18n="settingCurrencyLabel">Währung</div>
+          <div class="setting-sub" data-i18n="settingCurrencySub">Für Finanzen und Einkäufe</div>
+        </div>
+        <select id="setting-currency" onchange="saveSetting('currency', this.value); renderAll();">
+          <option value="USD">USD ($)</option>
+          <option value="ETB">ETB (Br)</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label" data-i18n="settingMilchpreisLabel">Milchpreis pro kg</div>
+          <div class="setting-sub" data-i18n="settingMilchpreisSub">Für automatische Berechnung des Milchverkaufs</div>
+        </div>
+        <input type="number" id="setting-milchpreis" min="0" step="0.01" value="0" onchange="saveSetting('milchpreis', this.value)">
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label" data-i18n="settingPwLabel">Zugangspasswort</div>
+          <div class="setting-sub" data-i18n="settingPwSub">Passwort für den Login-Bildschirm ändern</div>
+        </div>
+        <button class="btn secondary sm" onclick="changePassword()" data-i18n="changePwBtn">Ändern</button>
+      </div>
+    </div>
+  </div>
+  <div class="info-box danger" style="margin-top:16px;">
+    ⚠️ <span data-i18n="datenWarn">Achtung: Beim Importieren werden alle aktuellen Daten überschrieben. Vorher exportieren!</span>
+  </div>
+  <button class="btn danger sm" onclick="clearAll()">🗑 <span data-i18n="clearBtn">Alle Daten löschen</span></button>
+</section>
+
+</main>
+
+<footer class="af"><span data-i18n="appTitle">Stallbuch Pro</span> · <span data-i18n="footerTxt">Offline-fähig · keine Daten verlassen dieses Gerät</span></footer>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<input type="file" id="import-input" accept="application/json" style="display:none" onchange="handleImport(event)">
+<div id="print-area"></div>
+
+<script>
+/* ===== I18N ===== */
+const T={
+de:{
+  appTitle:'Stallbuch Pro', appTagline:'Professionelle Rinderfarm-Verwaltung', saved:'Gespeichert ✓', logoutBtn:'Abmelden',
+  navDash:'Übersicht', navKuehe:'Kühe', navKaelber:'Kälber', navBullen:'Bullen', navBes:'Besamung', navBrunst:'Brunst', navHealth:'Gesundheit', navMilch:'Milch', navDaten:'Daten',
+  dashTitle:'Übersicht', upcomingCalv:'Anstehende Kalbungen', waitingBes:'Wartezeit nach Kalbung', upcomingHeat:'Brunst (nächste 7 Tage)', milkTodayTitle:'Milch heute (Ø je Kuh)', recentHealth:'Letzte Behandlungen',
+  statAktiv:'Kühe aktiv', statTraechtig:'Trächtig', statKaelber:'Kälber', statBullen:'Bullen', statHealth:'Behandlungen',
+  noCalv:'Keine trächtigen Kühe.', noWait:'Keine Kühe in der Wartezeit.', noHeat:'Keine Brunst in 7 Tagen.', noMilkToday:'Heute noch kein Milcheintrag.', noHealth:'Keine Behandlungen eingetragen.',
+  overdueSince:'ÜBERFÄLLIG {n} Tg.', todayExp:'heute erwartet', inDays:'in {n} Tg.', inDaysDate:'{n} Tg. – {d}', waitReady:'Bereit zur Besamung!', waitDaysLeft:'{n} Tage noch',
+  milkedCount:'{n} Kühe gemolken', milkTotal:'{s} kg gesamt · Ø {a} kg',
+  kueheTitle:'Kühe', searchPh:'Name oder Nummer suchen…', addKuh:'Kuh hinzufügen',
+  thName:'Name', thNr:'Nummer', thRasse:'Rasse', thGeb:'Geburtsdatum', thLakt:'Lakt.', thGewicht:'Gewicht', thStatus:'Status', thNotizen:'Notizen',
+  thKuh:'Kuh', thBulle:'Bulle', thDatum:'Datum', thErwKalb:'Erw. Kalbetermin', thMutter:'Mutter', thVater:'Vater', thGeschlecht:'Geschlecht',
+  thDatumBeo:'Datum beobachtet', thTier:'Tier', thDiagnose:'Diagnose', thMedikament:'Medikament', thTierarzt:'Tierarzt', thNaechster:'Nächster Termin',
+  thMilch:'Milch (kg)', thFutter:'Futter (kg)', thFutterArt:'Futterart', thEffizienz:'Effizienz', thAlter:'Alter', thBesStatus:'Besamung',
+  ageDays:'Tage', ageMonths:'Monate', ageYears:'Jahre', lFutterArt:'Futterart', besLinked:'Besamt am {d}', linkedFromBrunst:'Diese Besamung ist mit einer Brunstbeobachtung verknüpft.',
+  lFutterItems:'Futterarten (Art + kg)', addFutterRow:'Futterart hinzufügen',
+  noKuehe:'Noch keine Kühe. Klicke „+ Kuh hinzufügen".', noKaelber:'Noch keine Kälber.', noBullen:'Noch keine Bullen.', noBes:'Noch keine Besamungen.', noBrunst:'Noch keine Brunst.', noHealthRec:'Noch keine Behandlungen.', noForecast:'Noch keine Brunstdaten.',
+  kaelberTitle:'Kälber', addKalb:'Kalb hinzufügen',
+  bullenTitle:'Bullen', addBulle:'Bulle hinzufügen',
+  besTitle:'Besamung & Trächtigkeit', addBes:'Besamung eintragen',
+  brunstTitle:'Brunstkalender', addBrunst:'Brunst eintragen', forecastTitle:'Vorhersage – nächste Brunst', lastHeat:'letzte Brunst: {d}',
+  healthTitle:'Gesundheit & Behandlungen', addHealth:'Behandlung eintragen',
+  milchTitle:'Milch', addMilch:'Tageseintrag',
+  milchInfo:'Trage pro Kuh und Tag die Milchmenge (kg) und Futtermenge (kg) ein. Die App berechnet automatisch Tages-, Monats- und Laktationswerte sowie den Trend zur vorherigen Laktation.',
+  allEntries:'Alle Einträge', searchKuhPh:'Kuh suchen…', noMilkEntries:'Noch keine Kuh mit erfasster Milchmenge. Klicke „+ Zeitraum hinzufügen".',
+  heute:'Heute', diesenMonat:'Diesen Monat', aktuelleLakt:'Aktuelle Laktation', keineVorlaktation:'Keine Vorlaktation', trendVs:'ggü. Lakt. #{n}',
+  fMilchNew:'Tageseintrag Milch & Futter', fMilchEdit:'Eintrag bearbeiten',
+  lKuh:'Kuh *', lDatumStar:'Datum *', lMilchKg:'Milch (kg) *', lFutterKg:'Futter (kg)', lLaktNr:'Laktationsnummer', hintLaktNr:'Wird automatisch von der Kuh übernommen, falls leer.',
+  confDelMilch:'Eintrag löschen?',
+  datenTitle:'Daten & Einstellungen', exportTitle:'Export / Import', exportInfo:'Sichere deine Daten regelmäßig als JSON-Datei.', exportBtn:'Daten exportieren (.json)', importBtn:'Daten importieren',
+  settingsTitle:'Einstellungen', settingWaitLabel:'Wartezeit nach Kalbung', settingWaitSub:'Tage bis zur nächsten Besamung (Standard: 42)', settingCycleLabel:'Brunstzyklus', settingCycleSub:'Tage (Standard: 21)',
+  settingPwLabel:'Zugangspasswort', settingPwSub:'Passwort für den Login-Bildschirm ändern', changePwBtn:'Ändern',
+  datenWarn:'Achtung: Beim Importieren werden alle aktuellen Daten überschrieben. Vorher exportieren!', clearBtn:'Alle Daten löschen', footerTxt:'Offline-fähig · keine Daten verlassen dieses Gerät',
+  edit:'Bearbeiten', del:'Löschen', promote:'Als Kuh übernehmen', print:'Drucken',
+  printOn:'Gedruckt am', printBes:'Besamungen', printBrunst:'Brunst-Verlauf', printHealth:'Behandlungen', printMilch:'Milch & Futter', printCalves:'Kälber', pNone:'Keine Einträge.',
+  statusAktiv:'Aktiv', statusTraechtig:'Trächtig (manuell)', statusTrocken:'Trockenstehend', statusVerkauft:'Verkauft/Abgegangen', statusWarte:'Wartezeit',
+  besDurch:'Durchgeführt', besTrae:'Bestätigt trächtig', besNicht:'Nicht erfolgreich', besAbge:'Abgekalbt',
+  fKuhNew:'Neue Kuh', fKuhEdit:'Kuh bearbeiten', fKalbNew:'Neues Kalb', fKalbEdit:'Kalb bearbeiten',
+  fBulleNew:'Neuer Bulle', fBulleEdit:'Bulle bearbeiten', fBesNew:'Besamung eintragen', fBesEdit:'Besamung bearbeiten',
+  fBrunstNew:'Brunst eintragen', fBrunstEdit:'Brunst bearbeiten', fHealthNew:'Behandlung eintragen', fHealthEdit:'Behandlung bearbeiten',
+  lName:'Name *', lNr:'Nummer (Ohrmarke)', lRasse:'Rasse', lGeb:'Geburtsdatum', lStatus:'Status', lNotizen:'Notizen', lGewicht:'Gewicht (kg)', lLakt:'Laktationsnummer',
+  lMutter:'Mutter', lVater:'Vater (Bulle)', lGeschlecht:'Geschlecht', lBulle:'Bulle (aus Liste)', lBulleText:'Falls nicht in Liste: Bezeichnung', lDatum:'Datum *', lErwKalb:'Erw. Kalbetermin',
+  lDiagnose:'Diagnose / Behandlung', lMedikament:'Medikament / Dosis', lTierarzt:'Tierarzt', lNaechster:'Nächster Termin', lTier:'Tier', lTierName:'Falls nicht in Liste: Name', lDatumBeo:'Datum beobachtet *',
+  weiblich:'weiblich', maennlich:'männlich', optWaehl:'– wählen –', optUnbek:'– unbekannt –', optFreitext:'– Freitext unten –',
+  hintKalb:'Wird beim Speichern automatisch berechnet (283 Tage nach Besamungsdatum), falls leer gelassen.',
+  cancel:'Abbrechen', save:'Speichern',
+  confDelKuh:'Kuh wirklich löschen?', confDelKalb:'Kalb löschen?', confDelBulle:'Bulle löschen?', confDelBes:'Besamung löschen?', confDelBrunst:'Brunst löschen?', confDelHealth:'Behandlung löschen?',
+  confPromote:'"{n}" als Kuh übernehmen?', confImport:'Alle Daten werden überschrieben. Fortfahren?', confClear1:'ALLE Daten löschen – nicht rückgängig!', confClear2:'Wirklich alles löschen?',
+  importOk:'Daten importiert!', importErr:'Datei ungültig.', saveErr:'Speichern fehlgeschlagen – exportiere deine Daten!',
+  lockSubNew:'Neues Passwort festlegen (mind. 4 Zeichen)', lockSubLogin:'Bitte Passwort eingeben', lockPwPh:'Passwort', lockPwPh2:'Passwort wiederholen', lockBtn:'Weiter',
+  lockHint:'Das Passwort wird nur in diesem Browser gespeichert – kein Server, keine Installation nötig. Änderbar im Tab „Daten".',
+  lockErrShort:'Mindestens 4 Zeichen.', lockErrMismatch:'Passwörter stimmen nicht überein.', lockErrWrong:'Falsches Passwort.',
+  pwPromptCurrent:'Aktuelles Passwort eingeben:', pwPromptNew:'Neues Passwort (mind. 4 Zeichen):', pwPromptRepeat:'Neues Passwort wiederholen:',
+  pwErrWrong:'Falsches Passwort.', pwErrShort:'Mindestens 4 Zeichen.', pwErrMismatch:'Passwörter stimmen nicht überein.', pwChanged:'Passwort geändert.',
+  navErgaenzung:'Ergänzung', navEinkauf:'Einkäufe',
+  dryOffTitle:'Trockenstellen', ergaenzungDueTitle:'Ergänzung fällig', noDryOff:'Keine Kuh zum Trockenstellen ansteht.', noErgaenzungDue:'Keine Ergänzung in den nächsten Tagen fällig.',
+  ergResumesIn:'Pause endet in {n} Tg.', ergPauseIn:'Pause beginnt in {n} Tg.',
+  settingDryLabel:'Trockenstehzeit vor Kalbung', settingDrySub:'Tage vor dem Kalbetermin (Standard: 60)',
+  lTrockenSeit:'Trockenstehend seit', hintTrocken:'Optional: Datum eintragen, wenn die Kuh trockengestellt wurde.', hintTrockenSuggest:'Empfohlen: {d} (auf Basis des Kalbetermins). Früher trockenstellen ist jederzeit möglich.',
+  ergaenzungTitle:'Ergänzung (Mineralien & Getreide)', addErgaenzung:'Ergänzung eintragen',
+  ergaenzungInfo:'Trage Mineralien oder Getreide je Tier ein: Menge, Startdatum, wie viele Tage gegeben und wie viele Tage Pause. Die App berechnet automatisch, ob aktuell Gabe oder Pause ist und wann es weitergeht.',
+  thErgArt:'Art', thErgName:'Bezeichnung', thErgMenge:'Menge', thErgStart:'Start', thErgDauerPause:'Gabe/Pause (Tage)', thErgStatus:'Status',
+  noErgaenzung:'Noch keine Ergänzung eingetragen.', ergTypMineral:'Mineralien', ergTypGetreide:'Getreide', ergTypSonstiges:'Sonstiges',
+  ergStartsIn:'Startet in {n} Tg.', ergActive:'Wird gegeben · noch {n} Tg.', ergPaused:'Pause · noch {n} Tg.',
+  fErgNew:'Ergänzung eintragen', fErgEdit:'Ergänzung bearbeiten', lErgTyp:'Art', lErgName:'Bezeichnung', lErgMenge:'Menge', lErgEinheit:'Einheit',
+  lErgStart:'Startdatum', lErgDauer:'Gabe (Tage)', lErgPause:'Pause (Tage)', hintErgPause:'Nach Ablauf der Pause zeigt die App automatisch wieder "Wird gegeben" an.',
+  confDelErgaenzung:'Ergänzung löschen?',
+  einkaufTitle:'Einkäufe', addEinkauf:'Einkauf eintragen', einkaufTotal:'Gesamt',
+  thArtikel:'Artikel', thMenge:'Menge', thEinheit:'Einheit', thPreis:'Preis', thPreisEinheit:'Preis/Einheit',
+  noEinkauf:'Noch keine Einkäufe eingetragen.', fEinkaufNew:'Einkauf eintragen', fEinkaufEdit:'Einkauf bearbeiten',
+  lArtikel:'Artikel', lMenge:'Menge', lEinheit:'Einheit (z.B. kg, Liter, Sack)', lPreis:'Preis (gesamt)',
+  hintPreis:'Gesamtpreis für diesen Einkauf, nicht Preis pro Einheit.', confDelEinkauf:'Einkauf löschen?',
+  ergaenzungEmpfehlung:'Empfehlung: Laktierende Kühe – 250 ml Kalkwasser (Calcium) + 1 kg Weizenkleie pro Kuh/Tag. Trächtige Kühe – ebenso 250 ml Kalkwasser + 1 kg Weizenkleie, bis 6 Wochen vor dem Kalbetermin, dann Pause während der Trockenstehzeit, danach sofort nach dem Kalben wieder Kalkwasser geben. Kälber – 100 ml Kalkwasser (Calcium) + 0,3 kg Weizenkleie (Phosphor) pro Kalb/Tag. Über die Schnellauswahl unten im Formular kannst du diese Werte automatisch übernehmen.',
+  lErgPreset:'Empfehlung übernehmen', presetLaktKalk:'Laktierende Kuh – Kalkwasser (250 ml)', presetLaktKleie:'Laktierende Kuh – Weizenkleie (1 kg)',
+  presetTraechtigKalk:'Trächtige Kuh – Kalkwasser (bis 6 Wo. vor Kalbung)', presetTraechtigKleie:'Trächtige Kuh – Weizenkleie (bis 6 Wo. vor Kalbung)',
+  presetKalbKalk:'Kalb – Kalkwasser (100 ml)', presetKalbKleie:'Kalb – Weizenkleie (0,3 kg)',
+  lDatumBis:'Bis Datum (optional)', hintDatumBis:'Für mehrtägige Behandlungen/Injektionskuren: Enddatum eintragen.', healthDayOf:'Tag {n}/{m}',
+  navFinanzen:'Finanzen', settingCurrencyLabel:'Währung', settingCurrencySub:'Für Finanzen und Einkäufe',
+  finanzenTitle:'Finanzen', addFinanz:'Buchung eintragen',
+  finanzenInfo:'Trage Einnahmen (z.B. Milchverkauf, Tierverkauf) und Ausgaben (z.B. Mitarbeiterkosten, Reparaturen) ein. Futter- und Ergänzungs-Einkäufe aus dem Tab „Einkäufe" werden automatisch als Ausgaben mitgerechnet.',
+  chartAusgaben:'Ausgaben nach Kategorie', chartEinnahmen:'Einnahmen nach Kategorie',
+  thTyp:'Typ', thKategorie:'Kategorie', thBeschreibung:'Beschreibung', thBetrag:'Betrag',
+  noFinanzen:'Noch keine Buchungen eingetragen.', gesamtEinnahmen:'Gesamteinnahmen', gesamtAusgaben:'Gesamtausgaben', gewinnVerlust:'Gewinn/Verlust',
+  katMitarbeiter:'Mitarbeiterkosten', katReparatur:'Reparaturen', katTierarzt:'Tierarzt/Gesundheit', katSonstigeAusgabe:'Sonstige Ausgaben',
+  katMilchverkauf:'Milchverkauf', katTierverkauf:'Tierverkauf', katSonstigeEinnahme:'Sonstige Einnahmen', katEinkauf:'Futter & Einkäufe',
+  typAusgabe:'Ausgabe', typEinnahme:'Einnahme', fFinanzNew:'Buchung eintragen', fFinanzEdit:'Buchung bearbeiten',
+  lTyp:'Typ', lKategorie:'Kategorie', lBeschreibung:'Beschreibung', lBetrag:'Betrag', confDelFinanz:'Buchung löschen?',
+  settingMilchpreisLabel:'Milchpreis pro kg', settingMilchpreisSub:'Für automatische Berechnung des Milchverkaufs',
+  monatTitle:'Monatsübersicht', thMonat:'Monat', thEinnahmenKurz:'Einnahmen', thAusgabenKurz:'Ausgaben', thGewinn:'Gewinn/Verlust',
+  milchverkaufTitle:'Täglicher Milchverkauf', milchverkaufInfo:'Wird automatisch aus der konstanten Milchmenge (Tab „Milch") und dem Milchpreis (Einstellungen) berechnet. War es an einem Tag mehr oder weniger, kannst du den Betrag mit ✏️ manuell anpassen.',
+  thMilchmenge:'Menge (kg)', thBerechnet:'Berechnet', thTatsaechlich:'Tatsächlich', buchungenTitle:'Manuelle Buchungen', noMilchverkauf:'Noch keine Milchmenge erfasst.',
+  fMilchverkaufEdit:'Milchverkauf anpassen', lMilchmenge:'Milchmenge', lTatsaechlicherBetrag:'Tatsächlicher Betrag',
+  hintMilchBetrag:'Automatisch berechnet aus Menge × Milchpreis. Bei Bedarf anpassen.', btnAutoBerechnen:'Automatisch berechnen',
+  milchrateTitle:'Konstante Milchmenge', addMilchrate:'Zeitraum hinzufügen',
+  milchrateInfo:'Trage pro Kuh einen Zeitraum ein, in dem sie konstant die gleiche Milchmenge pro Tag gibt (z.B. von 01.03. bis 15.04. jeden Tag 18 kg). Lässt du „Bis" leer, gilt die Menge bis auf Weiteres. Ein tägliches Eintragen ist nicht nötig – die App rechnet automatisch jeden Tag damit weiter.',
+  thKgProTag:'kg/Tag', thSeit:'Seit', thVon:'Von', thBis:'Bis', noMilchrate:'Noch kein Zeitraum festgelegt.',
+  fMilchrateNew:'Zeitraum hinzufügen', fMilchrateEdit:'Zeitraum bearbeiten', lSeitDatum:'Von (Datum) *', lBisDatum:'Bis (Datum, optional)',
+  hintMilchrateVon:'Ab wann gilt diese Menge?', hintMilchrateBis:'Leer lassen, wenn die Menge bis auf Weiteres gilt.', lKgProTag:'kg pro Tag',
+  hintMilchrateKg:'Wird für jeden Tag in diesem Zeitraum automatisch verwendet.', confDelMilchrate:'Diesen Zeitraum löschen?', milchrateOngoing:'laufend',
+  fixkostenTitle:'Fixkosten (wiederkehrend)', addFixkosten:'Fixkosten festlegen',
+  fixkostenInfo:'Für Kosten, die jeden Monat gleich bleiben (z.B. Mitarbeitergehalt). Einmal eintragen – die App rechnet automatisch jeden Monat weiter, bis du einen neuen Betrag einträgst.',
+  thBetragProMonat:'Betrag/Monat', thSeitMonat:'Seit', noFixkosten:'Noch keine Fixkosten festgelegt.',
+  fFixkostenNew:'Fixkosten festlegen', fFixkostenEdit:'Fixkosten ändern', lSeitMonat:'Seit Monat',
+  hintFixkostenVon:'Ab welchem Monat gilt dieser Betrag? Bisherige Monate bleiben unverändert.', lBetragProMonat:'Betrag pro Monat',
+  hintFixkostenBetrag:'Wird automatisch jeden Monat als Ausgabe verwendet, bis ein neuer Betrag eingetragen wird.', confDelFixkosten:'Fixkosten für diese Kategorie löschen?',
+  futterpreisTitle:'Futterpreise (aktuell)', addFutterpreis:'Preis festlegen',
+  futterpreisInfo:'Lege pro Artikel (z.B. Heu, Getreide) den aktuellen Preis pro Einheit fest. Beim Eintragen eines Einkaufs wird der Preis automatisch vorausgefüllt. Steigt der Preis, trage einfach den neuen Preis ein – ältere Einkäufe bleiben unverändert.',
+  noFutterpreis:'Noch keine Futterpreise festgelegt.', fFutterpreisNew:'Preis festlegen', fFutterpreisEdit:'Preis ändern',
+  lPreisProEinheit:'Preis pro Einheit', hintFutterpreisArtikel:'Name des Artikels (z.B. Heu, Getreide).',
+  hintFutterpreisBetrag:'Wird automatisch als Vorschlag beim Einkauf-Eintrag verwendet.', hintFutterpreisVon:'Ab wann gilt dieser Preis? Bisherige Einkäufe bleiben unverändert.',
+  confDelFutterpreis:'Futterpreis für diesen Artikel löschen?',
+  hintMilchKgRate:'Wird automatisch aus der konstanten Tagesmenge übernommen, falls für diese Kuh hinterlegt. Bei Bedarf anpassen.',
+  hintFixkostenAktiv:'ℹ️ Für diese Kategorie ist bereits eine Fixkosten-Automatik aktiv: {n}/Monat seit {d}. Diese Buchung wird zusätzlich gezählt.',
+  stammbaumTitle:'Stammbaum', unbekannt:'Unbekannt',
+  lMutterText:'Mutter (falls nicht in Liste)', lVaterText:'Vater (falls nicht in Liste)',
+  lMutterUnbekannt:'Mutter unbekannt', lVaterUnbekannt:'Vater unbekannt (z.B. gekauft oder unbekannte Besamung)',
+  hintElternText:'Falls das Tier nicht in der Liste ist, hier Name/Bezeichnung eintragen.',
+  lVaterBulle:'Vater (Bulle aus Liste)', lVaterInfo:'Vater (Referenz-Info)', lMutterInfo:'Mutter (Referenz-Info)',
+  hintBulleInfo:'Freitext-Info zur Abstammung dieses Bullen, falls bekannt (z.B. aus Besamungs-Katalog).',
+  warnInzucht:'⚠️ Achtung: Dieser Bulle ist der Vater von {n}! Bitte einen anderen Bullen wählen, um Inzucht zu vermeiden.'
+},
+en:{
+  appTitle:'Herd Book Pro', appTagline:'Professional cattle farm management', saved:'Saved ✓', logoutBtn:'Log out',
+  navDash:'Overview', navKuehe:'Cows', navKaelber:'Calves', navBullen:'Bulls', navBes:'Breeding', navBrunst:'Heat', navHealth:'Health', navMilch:'Milk', navDaten:'Data',
+  dashTitle:'Overview', upcomingCalv:'Upcoming Calvings', waitingBes:'Post-calving waiting period', upcomingHeat:'Heat (next 7 days)', milkTodayTitle:'Milk today (avg per cow)', recentHealth:'Recent Treatments',
+  statAktiv:'Active cows', statTraechtig:'Pregnant', statKaelber:'Calves', statBullen:'Bulls', statHealth:'Treatments',
+  noCalv:'No pregnant cows.', noWait:'No cows in waiting period.', noHeat:'No heat in 7 days.', noMilkToday:'No milk entry yet today.', noHealth:'No treatments recorded.',
+  overdueSince:'OVERDUE {n} days', todayExp:'expected today', inDays:'in {n} days', inDaysDate:'{n} days – {d}', waitReady:'Ready to breed!', waitDaysLeft:'{n} days remaining',
+  milkedCount:'{n} cows milked', milkTotal:'{s} kg total · avg {a} kg',
+  kueheTitle:'Cows', searchPh:'Search by name or number…', addKuh:'Add cow',
+  thName:'Name', thNr:'Number', thRasse:'Breed', thGeb:'Date of birth', thLakt:'Lact.', thGewicht:'Weight', thStatus:'Status', thNotizen:'Notes',
+  thKuh:'Cow', thBulle:'Bull', thDatum:'Date', thErwKalb:'Expected calving', thMutter:'Mother', thVater:'Father', thGeschlecht:'Sex',
+  thDatumBeo:'Date observed', thTier:'Animal', thDiagnose:'Diagnosis', thMedikament:'Medication', thTierarzt:'Vet', thNaechster:'Next appointment',
+  thMilch:'Milk (kg)', thFutter:'Feed (kg)', thFutterArt:'Feed type', thEffizienz:'Efficiency', thAlter:'Age', thBesStatus:'Breeding',
+  ageDays:'days', ageMonths:'months', ageYears:'years', lFutterArt:'Feed type', besLinked:'Bred on {d}', linkedFromBrunst:'This breeding is linked to a heat observation.',
+  lFutterItems:'Feed types (type + kg)', addFutterRow:'Add feed type',
+  noKuehe:'No cows yet. Click "+ Add cow".', noKaelber:'No calves yet.', noBullen:'No bulls yet.', noBes:'No breeding records.', noBrunst:'No heat records.', noHealthRec:'No treatments yet.', noForecast:'No heat data yet.',
+  kaelberTitle:'Calves', addKalb:'Add calf',
+  bullenTitle:'Bulls', addBulle:'Add bull',
+  besTitle:'Breeding & Pregnancy', addBes:'Log breeding',
+  brunstTitle:'Heat Calendar', addBrunst:'Log heat', forecastTitle:'Forecast – next heat', lastHeat:'last heat: {d}',
+  healthTitle:'Health & Treatments', addHealth:'Log treatment',
+  milchTitle:'Milk', addMilch:'Daily entry',
+  milchInfo:'Log the daily milk yield (kg) and feed amount (kg) per cow. The app automatically calculates daily, monthly and per-lactation totals, plus the trend versus the previous lactation.',
+  allEntries:'All entries', searchKuhPh:'Search cow…', noMilkEntries:'No cow with a milk amount set yet. Click "+ Add period".',
+  heute:'Today', diesenMonat:'This month', aktuelleLakt:'Current lactation', keineVorlaktation:'No previous lactation', trendVs:'vs. lact. #{n}',
+  fMilchNew:'Daily entry milk & feed', fMilchEdit:'Edit entry',
+  lKuh:'Cow *', lDatumStar:'Date *', lMilchKg:'Milk (kg) *', lFutterKg:'Feed (kg)', lLaktNr:'Lactation number', hintLaktNr:'Automatically taken from the cow if left empty.',
+  confDelMilch:'Delete entry?',
+  datenTitle:'Data & Settings', exportTitle:'Export / Import', exportInfo:'Back up your data regularly as a JSON file.', exportBtn:'Export data (.json)', importBtn:'Import data',
+  settingsTitle:'Settings', settingWaitLabel:'Post-calving waiting period', settingWaitSub:'Days until next breeding (default: 42)', settingCycleLabel:'Heat cycle', settingCycleSub:'Days (default: 21)',
+  settingPwLabel:'Access password', settingPwSub:'Change the password for the login screen', changePwBtn:'Change',
+  datenWarn:'Warning: importing will overwrite all current data. Export a backup first!', clearBtn:'Delete all data', footerTxt:'Offline capable · no data leaves this device',
+  edit:'Edit', del:'Delete', promote:'Promote to cow', print:'Print',
+  printOn:'Printed on', printBes:'Breeding', printBrunst:'Heat history', printHealth:'Treatments', printMilch:'Milk & Feed', printCalves:'Calves', pNone:'No records.',
+  statusAktiv:'Active', statusTraechtig:'Pregnant (manual)', statusTrocken:'Dry', statusVerkauft:'Sold/Gone', statusWarte:'Waiting period',
+  besDurch:'Performed', besTrae:'Confirmed pregnant', besNicht:'Not successful', besAbge:'Calved',
+  fKuhNew:'New cow', fKuhEdit:'Edit cow', fKalbNew:'New calf', fKalbEdit:'Edit calf',
+  fBulleNew:'New bull', fBulleEdit:'Edit bull', fBesNew:'Log breeding', fBesEdit:'Edit breeding',
+  fBrunstNew:'Log heat', fBrunstEdit:'Edit heat', fHealthNew:'Log treatment', fHealthEdit:'Edit treatment',
+  lName:'Name *', lNr:'Number (ear tag)', lRasse:'Breed', lGeb:'Date of birth', lStatus:'Status', lNotizen:'Notes', lGewicht:'Weight (kg)', lLakt:'Lactation number',
+  lMutter:'Mother', lVater:'Father (bull)', lGeschlecht:'Sex', lBulle:'Bull (from list)', lBulleText:'If not in list: name/ID', lDatum:'Date *', lErwKalb:'Expected calving',
+  lDiagnose:'Diagnosis / Treatment', lMedikament:'Medication / Dose', lTierarzt:'Vet', lNaechster:'Next appointment', lTier:'Animal', lTierName:'If not in list: name', lDatumBeo:'Date observed *',
+  weiblich:'female', maennlich:'male', optWaehl:'– select –', optUnbek:'– unknown –', optFreitext:'– free text below –',
+  hintKalb:'Calculated automatically on save (283 days after breeding date) if left empty.',
+  cancel:'Cancel', save:'Save',
+  confDelKuh:'Really delete this cow?', confDelKalb:'Delete calf?', confDelBulle:'Delete bull?', confDelBes:'Delete breeding record?', confDelBrunst:'Delete heat record?', confDelHealth:'Delete treatment?',
+  confPromote:'Promote "{n}" to cow list?', confImport:'All data will be replaced. Continue?', confClear1:'DELETE ALL data – cannot be undone!', confClear2:'Really delete everything?',
+  importOk:'Data imported!', importErr:'Invalid file.', saveErr:'Save failed – export your data!',
+  lockSubNew:'Set a new password (min. 4 characters)', lockSubLogin:'Please enter your password', lockPwPh:'Password', lockPwPh2:'Repeat password', lockBtn:'Continue',
+  lockHint:'The password is only stored in this browser – no server, no installation needed. Changeable in the "Data" tab.',
+  lockErrShort:'At least 4 characters.', lockErrMismatch:'Passwords do not match.', lockErrWrong:'Wrong password.',
+  pwPromptCurrent:'Enter current password:', pwPromptNew:'New password (min. 4 characters):', pwPromptRepeat:'Repeat new password:',
+  pwErrWrong:'Wrong password.', pwErrShort:'At least 4 characters.', pwErrMismatch:'Passwords do not match.', pwChanged:'Password changed.',
+  navErgaenzung:'Supplements', navEinkauf:'Purchases',
+  dryOffTitle:'Drying Off', ergaenzungDueTitle:'Supplement Due', noDryOff:'No cow due for drying off.', noErgaenzungDue:'No supplement due in the next few days.',
+  ergResumesIn:'Pause ends in {n} days', ergPauseIn:'Pause starts in {n} days',
+  settingDryLabel:'Dry-off period before calving', settingDrySub:'Days before expected calving (default: 60)',
+  lTrockenSeit:'Dry since', hintTrocken:'Optional: enter the date the cow was dried off.', hintTrockenSuggest:'Suggested: {d} (based on expected calving date). Drying off earlier is always possible.',
+  ergaenzungTitle:'Supplements (Minerals & Grain)', addErgaenzung:'Log supplement',
+  ergaenzungInfo:'Log minerals or grain per animal: amount, start date, how many days given and how many days paused. The app automatically calculates whether it is currently active or paused and when it continues.',
+  thErgArt:'Type', thErgName:'Name', thErgMenge:'Amount', thErgStart:'Start', thErgDauerPause:'Active/Pause (days)', thErgStatus:'Status',
+  noErgaenzung:'No supplements logged yet.', ergTypMineral:'Minerals', ergTypGetreide:'Grain', ergTypSonstiges:'Other',
+  ergStartsIn:'Starts in {n} days', ergActive:'Active · {n} days left', ergPaused:'Paused · {n} days left',
+  fErgNew:'Log supplement', fErgEdit:'Edit supplement', lErgTyp:'Type', lErgName:'Name', lErgMenge:'Amount', lErgEinheit:'Unit',
+  lErgStart:'Start date', lErgDauer:'Active (days)', lErgPause:'Pause (days)', hintErgPause:'After the pause ends, the app automatically shows "Active" again.',
+  confDelErgaenzung:'Delete supplement?',
+  einkaufTitle:'Purchases', addEinkauf:'Log purchase', einkaufTotal:'Total',
+  thArtikel:'Item', thMenge:'Quantity', thEinheit:'Unit', thPreis:'Price', thPreisEinheit:'Price/Unit',
+  noEinkauf:'No purchases logged yet.', fEinkaufNew:'Log purchase', fEinkaufEdit:'Edit purchase',
+  lArtikel:'Item', lMenge:'Quantity', lEinheit:'Unit (e.g. kg, liter, bag)', lPreis:'Price (total)',
+  hintPreis:'Total price for this purchase, not price per unit.', confDelEinkauf:'Delete purchase?',
+  ergaenzungEmpfehlung:'Recommendation: Lactating cows – 250 ml limewater (calcium) + 1 kg wheat bran per cow/day. Pregnant cows – same 250 ml limewater + 1 kg wheat bran, up to 6 weeks before the expected calving date, then pause during the dry-off period, then give limewater again immediately after calving. Calves – 100 ml limewater (calcium) + 0.3 kg wheat bran (phosphorus) per calf/day. Use the quick-select below in the form to apply these values automatically.',
+  lErgPreset:'Apply recommendation', presetLaktKalk:'Lactating cow – Limewater (250 ml)', presetLaktKleie:'Lactating cow – Wheat bran (1 kg)',
+  presetTraechtigKalk:'Pregnant cow – Limewater (until 6 wks before calving)', presetTraechtigKleie:'Pregnant cow – Wheat bran (until 6 wks before calving)',
+  presetKalbKalk:'Calf – Limewater (100 ml)', presetKalbKleie:'Calf – Wheat bran (0.3 kg)',
+  lDatumBis:'Until date (optional)', hintDatumBis:'For multi-day treatments/injection courses: enter the end date.', healthDayOf:'Day {n}/{m}',
+  navFinanzen:'Finance', settingCurrencyLabel:'Currency', settingCurrencySub:'For Finance and Purchases',
+  finanzenTitle:'Finance', addFinanz:'Log entry',
+  finanzenInfo:'Log income (e.g. milk sales, animal sales) and expenses (e.g. staff costs, repairs). Feed and supplement purchases from the "Purchases" tab are automatically included as expenses.',
+  chartAusgaben:'Expenses by category', chartEinnahmen:'Income by category',
+  thTyp:'Type', thKategorie:'Category', thBeschreibung:'Description', thBetrag:'Amount',
+  noFinanzen:'No entries logged yet.', gesamtEinnahmen:'Total income', gesamtAusgaben:'Total expenses', gewinnVerlust:'Profit/Loss',
+  katMitarbeiter:'Staff costs', katReparatur:'Repairs', katTierarzt:'Vet/Health', katSonstigeAusgabe:'Other expenses',
+  katMilchverkauf:'Milk sales', katTierverkauf:'Animal sales', katSonstigeEinnahme:'Other income', katEinkauf:'Feed & Purchases',
+  typAusgabe:'Expense', typEinnahme:'Income', fFinanzNew:'Log entry', fFinanzEdit:'Edit entry',
+  lTyp:'Type', lKategorie:'Category', lBeschreibung:'Description', lBetrag:'Amount', confDelFinanz:'Delete entry?',
+  settingMilchpreisLabel:'Milk price per kg', settingMilchpreisSub:'For automatic calculation of milk sales',
+  monatTitle:'Monthly overview', thMonat:'Month', thEinnahmenKurz:'Income', thAusgabenKurz:'Expenses', thGewinn:'Profit/Loss',
+  milchverkaufTitle:'Daily milk sales', milchverkaufInfo:'Automatically calculated from the constant milk amount (tab "Milk") and the milk price (Settings). If a day sold more or less, adjust the amount with ✏️.',
+  thMilchmenge:'Amount (kg)', thBerechnet:'Calculated', thTatsaechlich:'Actual', buchungenTitle:'Manual entries', noMilchverkauf:'No milk amounts logged yet.',
+  fMilchverkaufEdit:'Adjust milk sale', lMilchmenge:'Milk amount', lTatsaechlicherBetrag:'Actual amount',
+  hintMilchBetrag:'Automatically calculated from amount × milk price. Adjust if needed.', btnAutoBerechnen:'Calculate automatically',
+  milchrateTitle:'Constant milk amount', addMilchrate:'Add period',
+  milchrateInfo:'For each cow, enter a period during which she gives the same constant milk amount per day (e.g. from 03/01 to 04/15, 18 kg every day). Leave "To" empty if the amount applies until further notice. No daily entry needed – the app automatically uses this every day.',
+  thKgProTag:'kg/day', thSeit:'Since', thVon:'From', thBis:'To', noMilchrate:'No period set yet.',
+  fMilchrateNew:'Add period', fMilchrateEdit:'Edit period', lSeitDatum:'From (date) *', lBisDatum:'To (date, optional)',
+  hintMilchrateVon:'From when does this amount apply?', hintMilchrateBis:'Leave empty if the amount applies until further notice.', lKgProTag:'kg per day',
+  hintMilchrateKg:'Automatically used for every day in this period.', confDelMilchrate:'Delete this period?', milchrateOngoing:'ongoing',
+  fixkostenTitle:'Fixed costs (recurring)', addFixkosten:'Set fixed cost',
+  fixkostenInfo:'For costs that stay the same every month (e.g. staff salary). Enter it once – the app automatically keeps using it every month until you enter a new amount.',
+  thBetragProMonat:'Amount/month', thSeitMonat:'Since', noFixkosten:'No fixed costs set yet.',
+  fFixkostenNew:'Set fixed cost', fFixkostenEdit:'Change fixed cost', lSeitMonat:'Since month',
+  hintFixkostenVon:'From which month does this amount apply? Past months stay unchanged.', lBetragProMonat:'Amount per month',
+  hintFixkostenBetrag:'Automatically used as an expense every month until a new amount is entered.', confDelFixkosten:'Delete the fixed cost for this category?',
+  futterpreisTitle:'Feed prices (current)', addFutterpreis:'Set price',
+  futterpreisInfo:'Set the current price per unit for each article (e.g. hay, grain). When logging a purchase, the price is filled in automatically. If the price goes up, just enter the new price – older purchases stay unchanged.',
+  noFutterpreis:'No feed prices set yet.', fFutterpreisNew:'Set price', fFutterpreisEdit:'Change price',
+  lPreisProEinheit:'Price per unit', hintFutterpreisArtikel:'Name of the article (e.g. hay, grain).',
+  hintFutterpreisBetrag:'Automatically used as a suggestion when logging a purchase.', hintFutterpreisVon:'From when does this price apply? Past purchases stay unchanged.',
+  confDelFutterpreis:'Delete the feed price for this article?',
+  hintMilchKgRate:'Automatically taken from the constant daily amount, if set for this cow. Adjust if needed.',
+  hintFixkostenAktiv:'ℹ️ This category already has an active fixed cost: {n}/month since {d}. This entry will be counted in addition.',
+  stammbaumTitle:'Pedigree', unbekannt:'Unknown',
+  lMutterText:'Dam (if not in list)', lVaterText:'Sire (if not in list)',
+  lMutterUnbekannt:'Dam unknown', lVaterUnbekannt:'Sire unknown (e.g. purchased or unknown insemination)',
+  hintElternText:'If the animal is not in the list, enter a name/description here.',
+  lVaterBulle:'Sire (bull from list)', lVaterInfo:'Sire (reference info)', lMutterInfo:'Dam (reference info)',
+  hintBulleInfo:'Free-text pedigree info for this bull, if known (e.g. from an AI catalog).',
+  warnInzucht:'⚠️ Warning: This bull is the sire of {n}! Please choose a different bull to avoid inbreeding.'
+},
+so:{
+  appTitle:'Buugga Xoolaha Pro', appTagline:'Maareynta xooluhu xirfadleh', saved:'La kaydiyay ✓', logoutBtn:'Ka bax',
+  navDash:'Guud-mar', navKuehe:'Sacyada', navKaelber:'Weylaha', navBullen:'Dibiyada', navBes:'Beerinta', navBrunst:'Heat', navHealth:'Caafimaad', navMilch:'Caano', navDaten:'Xogta',
+  dashTitle:'Guud-mar', upcomingCalv:'Dhalmooyinka Soo Socda', waitingBes:'Xilliga Sugitaanka', upcomingHeat:'Heat-ka (7 maalmood)', milkTodayTitle:'Caanaha maanta (celceliska sac kasta)', recentHealth:'Daawooyinkii Dambe',
+  statAktiv:'Sacyo firfircoon', statTraechtig:'Uur leh', statKaelber:'Weylo', statBullen:'Dibiyo', statHealth:'Daawooyinka',
+  noCalv:'Sacyo uur leh ma jiraan.', noWait:'Sacyo sugaya ma jiraan.', noHeat:'Xiligan heat lama filayo.', noMilkToday:'Maanta wali caano lama gelin.', noHealth:'Daawo lama diiwaan gelin.',
+  overdueSince:'DHAAFAY {n} maalmood', todayExp:'maanta la filayo', inDays:'{n} maalmood gudahood', inDaysDate:'{n} maalmood – {d}', waitReady:'Diyaar u ah beerinta!', waitDaysLeft:'{n} maalmood haray',
+  milkedCount:'{n} sac oo la lisay', milkTotal:'{s} kg wadar · celcelis {a} kg',
+  kueheTitle:'Sacyada', searchPh:'Magaca ama lambarka raadi…', addKuh:'Ku dar sac',
+  thName:'Magaca', thNr:'Lambarka', thRasse:'Nooca', thGeb:'Taariikhda Dhalashada', thLakt:'Lakt.', thGewicht:'Culayska', thStatus:'Xaaladda', thNotizen:'Faallooyin',
+  thKuh:'Sac', thBulle:'Dibi', thDatum:'Taariikhda', thErwKalb:'Dhalmada La Filayo', thMutter:'Hooyo', thVater:'Aabbe', thGeschlecht:'Jinsiga',
+  thDatumBeo:'Taariikh la arkay', thTier:'Xoolaha', thDiagnose:'Baaritaan/Daawooyin', thMedikament:'Dawo', thTierarzt:'Dhakhtar', thNaechster:'Ballan Xiga',
+  thMilch:'Caano (kg)', thFutter:'Quud (kg)', thFutterArt:'Nooca Quudka', thEffizienz:'Waxtarka', thAlter:"Da'da", thBesStatus:'Beerinta',
+  ageDays:'maalmood', ageMonths:'bilood', ageYears:'sano', lFutterArt:'Nooca Quudka', besLinked:'La beeray {d}', linkedFromBrunst:'Beerintan waxay la xiriirtaa Heat la arkay.',
+  lFutterItems:'Nooca Quudka (nooca + kg)', addFutterRow:'Ku dar nooc quud',
+  noKuehe:'Sac lama diiwaan gelin. Riix "+ Ku dar sac".', noKaelber:'Weyl lama diiwaan gelin.', noBullen:'Dibi lama diiwaan gelin.', noBes:'Beerin lama diiwaan gelin.', noBrunst:'Heat lama diiwaan gelin.', noHealthRec:'Daawooyin lama diiwaan gelin.', noForecast:'Xog Heat ah lama diiwaan gelin.',
+  kaelberTitle:'Weylaha', addKalb:'Ku dar weyl',
+  bullenTitle:'Dibiyada', addBulle:'Ku dar dibi',
+  besTitle:'Beerinta & Uurka', addBes:'Diiwaan geli beerinta',
+  brunstTitle:'Jadwalka Heat-ka', addBrunst:'Diiwaan geli Heat', forecastTitle:'Saadaasha – Heat-ka xiga', lastHeat:'Heat-ii hore: {d}',
+  healthTitle:'Caafimaadka & Daawooyinka', addHealth:'Diiwaan geli daawada',
+  milchTitle:'Caano', addMilch:'Gelinta maalinlaha ah',
+  milchInfo:'Sac kasta iyo maalin kasta geli xaddiga caanaha (kg) iyo quudka (kg). App-ku wuxuu si otomaatig ah u xisaabiyaa wadarta maalinlaha, bishii iyo xilliga uurka, iyo isbeddelka marka la barbardhigo xilliga uurka hore.',
+  allEntries:'Dhammaan Gelinta', searchKuhPh:'Sac raadi…', noMilkEntries:'Weli sac xaddig caano ah lama dejin. Riix "+ Ku dar Xilli".',
+  heute:'Maanta', diesenMonat:'Bishaan', aktuelleLakt:'Xilliga Uurka Hadda', keineVorlaktation:'Xilli uur oo hore ma jiro', trendVs:'marka la barbardhigo xilliga #{n}',
+  fMilchNew:'Gelinta maalinlaha ah ee Caano & Quud', fMilchEdit:'Wax ka beddel gelinta',
+  lKuh:'Sac *', lDatumStar:'Taariikhda *', lMilchKg:'Caano (kg) *', lFutterKg:'Quud (kg)', lLaktNr:'Lambarka xilliga uurka', hintLaktNr:'Waxaa si otomaatig ah looga soo qaadan doonaa sacu, haddii la banaan geliyo.',
+  confDelMilch:'Gelinta tirtir?',
+  datenTitle:'Xogta & Dejinta', exportTitle:'Soo saaris / Gelinta', exportInfo:'Xogta si joogto ah u kaydi ahaan file JSON.', exportBtn:'Soo saaris Xogta (.json)', importBtn:'Geli Xogta',
+  settingsTitle:'Dejinta', settingWaitLabel:'Xilliga Sugitaanka', settingWaitSub:'Maalmood ka dib dhalashada (caadi: 42)', settingCycleLabel:'Wareegga Heat', settingCycleSub:'Maalmood (caadi: 21)',
+  settingPwLabel:'Furaha Gelitaanka', settingPwSub:'Beddel furaha shaashadda gelitaanka', changePwBtn:'Beddel',
+  datenWarn:'Digniin: gelinta xogta waxay beddelaysaa dhammaan xogta jirta. Marka hore soo saaris!', clearBtn:'Tirtir Dhammaan Xogta', footerTxt:'Offline-capable · xogtu kama baxayso qalabkan',
+  edit:'Wax ka beddel', del:'Tirtir', promote:'Ka dhig Sac', print:'Daabac',
+  printOn:'La daabacay', printBes:'Beerinta', printBrunst:'Taariikhda Heat', printHealth:'Daawooyinka', printMilch:'Caano & Quud', printCalves:'Weylaha', pNone:'Gelin lama helin.',
+  statusAktiv:'Firfircoon', statusTraechtig:'Uur leh (gacanta)', statusTrocken:'Qallalan', statusVerkauft:'La iibiyay/Tagay', statusWarte:'Xilliga Sugitaanka',
+  besDurch:'La sameeyay', besTrae:'Uur la xaqiijiyay', besNicht:'Ma guulaysan', besAbge:'Way dhashay',
+  fKuhNew:'Sac cusub', fKuhEdit:'Wax ka beddel Sac', fKalbNew:'Weyl cusub', fKalbEdit:'Wax ka beddel Weyl',
+  fBulleNew:'Dibi cusub', fBulleEdit:'Wax ka beddel Dibi', fBesNew:'Diiwaan geli beerinta', fBesEdit:'Wax ka beddel beerinta',
+  fBrunstNew:'Diiwaan geli Heat', fBrunstEdit:'Wax ka beddel Heat', fHealthNew:'Diiwaan geli daawada', fHealthEdit:'Wax ka beddel daawada',
+  lName:'Magaca *', lNr:'Lambarka (calaamadda dhegta)', lRasse:'Nooca', lGeb:'Taariikhda Dhalashada', lStatus:'Xaaladda', lNotizen:'Faallooyin', lGewicht:'Culayska (kg)', lLakt:'Lambarka xilliga uurka',
+  lMutter:'Hooyo', lVater:'Aabbe (Dibi)', lGeschlecht:'Jinsiga', lBulle:'Dibi (liiska)', lBulleText:'Haddii aan liiska ku jirin: magaca', lDatum:'Taariikhda *', lErwKalb:'Dhalmada La Filayo',
+  lDiagnose:'Baaritaan/Daawayn', lMedikament:'Dawo/Qiyaas', lTierarzt:'Dhakhtar', lNaechster:'Ballan Xiga', lTier:'Xayawaan', lTierName:'Haddii aan liiska ku jirin: magaca', lDatumBeo:'Taariikh la arkay *',
+  weiblich:'dhedig', maennlich:'lab', optWaehl:'– dooro –', optUnbek:'– lama yaqaan –', optFreitext:'– qoraal hoose –',
+  hintKalb:'Waxaa si otomaatig ah loo xisaabin doonaa (283 maalmood) marka la kaydiyo, haddii la banaan geliyo.',
+  cancel:'Jooji', save:'Kaydi',
+  confDelKuh:'Runtii sac tirtir?', confDelKalb:'Weyl tirtir?', confDelBulle:'Dibi tirtir?', confDelBes:'Beerinta tirtir?', confDelBrunst:'Heat tirtir?', confDelHealth:'Daawada tirtir?',
+  confPromote:'"{n}" ka dhig sac?', confImport:'Dhammaan xogta waa la beddeli doonaa. Sii wad?', confClear1:'TIRTIR dhammaan xogta – lama celin karo!', confClear2:'Runtii dhammaan tirtir?',
+  importOk:'Xogta waa la geliyay!', importErr:'Faylka waa qalad.', saveErr:'Kaydintu way fashilantay – xogtaada soo saar!',
+  lockSubNew:'Deji furaha cusub (ugu yaraan 4 xaraf)', lockSubLogin:'Fadlan furaha geli', lockPwPh:'Furaha', lockPwPh2:'Furaha ku celi', lockBtn:'Sii wad',
+  lockHint:'Furuhu wuxuu ku kaydsan yahay browser-kan oo keliya – server ma jiro, wax lama rakibo. Waxaa laga beddeli karaa tab-ka "Xogta".',
+  lockErrShort:'Ugu yaraan 4 xaraf.', lockErrMismatch:'Furayaashu isku mid ma aha.', lockErrWrong:'Furaha waa qalad.',
+  pwPromptCurrent:'Geli furaha hadda jira:', pwPromptNew:'Furaha cusub (ugu yaraan 4 xaraf):', pwPromptRepeat:'Furaha cusub ku celi:',
+  pwErrWrong:'Furaha waa qalad.', pwErrShort:'Ugu yaraan 4 xaraf.', pwErrMismatch:'Furayaashu isku mid ma aha.', pwChanged:'Furaha waa la beddelay.',
+  navErgaenzung:'Kaydka', navEinkauf:'Iibsiga',
+  dryOffTitle:'Qallajinta', ergaenzungDueTitle:'Kaydka waa la siin karaa', noDryOff:'Sac loo baahan yahay in la qallajiyo ma jiro.', noErgaenzungDue:'Kaydi ku dhow maalmaha soo socda ma jiro.',
+  ergResumesIn:'Nasashadu waxay dhamaanaysaa {n} maalmood', ergPauseIn:'Nasashadu waxay bilaabmaysaa {n} maalmood',
+  settingDryLabel:'Xilliga Qallajinta ka hor Dhalashada', settingDrySub:'Maalmood ka hor dhalmada la filayo (caadi: 60)',
+  lTrockenSeit:'Qallalan tan iyo', hintTrocken:'Ikhtiyaari: geli taariikhda saca la qallajiyay.', hintTrockenSuggest:'Lagu talinayo: {d} (ku salaysan dhalmada la filayo). Waqti hore u qallajin ayaa mar kasta suurtogal ah.',
+  ergaenzungTitle:'Kaydka (Macdanta & Hadhuudhka)', addErgaenzung:'Diiwaan geli kaydka',
+  ergaenzungInfo:'Geli macdanta ama hadhuudhka xayawaan kasta: qadarka, taariikhda bilowga, immisa maalmood la siinayo iyo immisa maalmood nasasho ah. App-ku wuxuu si otomaatig ah u xisaabiyaa haddii hadda la siinayo ama nasasho ah tahay iyo goorta ay sii socoto.',
+  thErgArt:'Nooca', thErgName:'Magaca', thErgMenge:'Qadarka', thErgStart:'Bilowga', thErgDauerPause:'Bixinta/Nasashada (maalmood)', thErgStatus:'Xaaladda',
+  noErgaenzung:'Kaydi weli lama diiwaan gelin.', ergTypMineral:'Macdanta', ergTypGetreide:'Hadhuudhka', ergTypSonstiges:'Kale',
+  ergStartsIn:'Waxay bilaabmaysaa {n} maalmood', ergActive:'Waa la siinayaa · {n} maalmood hadhay', ergPaused:'Nasasho · {n} maalmood hadhay',
+  fErgNew:'Diiwaan geli kaydka', fErgEdit:'Wax ka beddel kaydka', lErgTyp:'Nooca', lErgName:'Magaca', lErgMenge:'Qadarka', lErgEinheit:'Cabbirka',
+  lErgStart:'Taariikhda Bilowga', lErgDauer:'Bixinta (maalmood)', lErgPause:'Nasashada (maalmood)', hintErgPause:'Marka nasashadu dhamaato, app-ku wuxuu si otomaatig ah u tusi doonaa "Waa la siinayaa" mar kale.',
+  confDelErgaenzung:'Kaydka tirtir?',
+  einkaufTitle:'Iibsiga', addEinkauf:'Diiwaan geli iibsiga', einkaufTotal:'Wadarta',
+  thArtikel:'Alaabta', thMenge:'Qadarka', thEinheit:'Cabbirka', thPreis:'Qiimaha', thPreisEinheit:'Qiimaha/Cabbirka',
+  noEinkauf:'Iibsi weli lama diiwaan gelin.', fEinkaufNew:'Diiwaan geli iibsiga', fEinkaufEdit:'Wax ka beddel iibsiga',
+  lArtikel:'Alaabta', lMenge:'Qadarka', lEinheit:'Cabbirka (tusaale kg, litir, kiish)', lPreis:'Qiimaha (guud)',
+  hintPreis:'Qiimaha guud ee iibsigan, ma aha qiimaha cabbir kasta.', confDelEinkauf:'Iibsiga tirtir?',
+  ergaenzungEmpfehlung:'Talo: Sacyada caanaha bixiya – 250 ml biyo-nuurad (Calcium) + 1 kg buun sarreen ah sac kasta maalintii. Sacyada uur leh – isla 250 ml biyo-nuurad + 1 kg buun sarreen ah, ilaa 6 toddobaad ka hor dhalmada la filayo, kadibna nasasho intii lagu jiray xilliga qallajinta, ka dibna dhalmada ka dib isla markiiba biyo-nuurad mar kale bixi. Weylaha – 100 ml biyo-nuurad (Calcium) + 0.3 kg buun sarreen ah (Phosphorus) weyl kasta maalintii. Isticmaal doorashada degdegga ah ee hoose foomka si aad si otomaatig ah qiyamahan u dalbato.',
+  lErgPreset:'Dalbo talada', presetLaktKalk:'Sac caano bixiya – Biyo-nuurad (250 ml)', presetLaktKleie:'Sac caano bixiya – Buun sarreen (1 kg)',
+  presetTraechtigKalk:'Sac uur leh – Biyo-nuurad (ilaa 6 toddobaad ka hor dhalmada)', presetTraechtigKleie:'Sac uur leh – Buun sarreen (ilaa 6 toddobaad ka hor dhalmada)',
+  presetKalbKalk:'Weyl – Biyo-nuurad (100 ml)', presetKalbKleie:'Weyl – Buun sarreen (0.3 kg)',
+  lDatumBis:'Ilaa taariikhda (ikhtiyaari)', hintDatumBis:'Daaweynta dhowr maalmood socota/koorsada irbadaha: geli taariikhda dhamaadka.', healthDayOf:'Maalin {n}/{m}',
+  navFinanzen:'Maaliyadda', settingCurrencyLabel:'Lacagta', settingCurrencySub:'Loogu talagalay Maaliyadda iyo Iibsiga',
+  finanzenTitle:'Maaliyadda', addFinanz:'Diiwaan geli xisaabta',
+  finanzenInfo:'Geli dakhliga (tusaale caanaha la iibiyay, xoolaha la iibiyay) iyo kharashka (tusaale mushaharka shaqaalaha, dayactirka). Iibsiga quudka iyo kaydka ee laga soo galay tab-ka "Iibsiga" ayaa si otomaatig ah loogu daraa kharashaadka.',
+  chartAusgaben:'Kharashka Nooca ahaan', chartEinnahmen:'Dakhliga Nooca ahaan',
+  thTyp:'Nooca', thKategorie:'Qaybta', thBeschreibung:'Sharaxaad', thBetrag:'Qadarka',
+  noFinanzen:'Xisaab weli lama diiwaan gelin.', gesamtEinnahmen:'Dakhliga Guud', gesamtAusgaben:'Kharashka Guud', gewinnVerlust:'Faa iido/Khasaare',
+  katMitarbeiter:'Mushaharka Shaqaalaha', katReparatur:'Dayactirka', katTierarzt:'Dhakhtar/Caafimaad', katSonstigeAusgabe:'Kharash Kale',
+  katMilchverkauf:'Iibinta Caanaha', katTierverkauf:'Iibinta Xoolaha', katSonstigeEinnahme:'Dakhli Kale', katEinkauf:'Quud & Iibsiga',
+  typAusgabe:'Kharash', typEinnahme:'Dakhli', fFinanzNew:'Diiwaan geli xisaabta', fFinanzEdit:'Wax ka beddel xisaabta',
+  lTyp:'Nooca', lKategorie:'Qaybta', lBeschreibung:'Sharaxaad', lBetrag:'Qadarka', confDelFinanz:'Xisaabta tirtir?',
+  settingMilchpreisLabel:'Qiimaha Caanaha kg', settingMilchpreisSub:'Loogu talagalay xisaabinta otomaatig ee iibinta caanaha',
+  monatTitle:'Guud-mar Bishii', thMonat:'Bisha', thEinnahmenKurz:'Dakhliga', thAusgabenKurz:'Kharashka', thGewinn:'Faa iido/Khasaare',
+  milchverkaufTitle:'Iibinta Caanaha Maalinlaha', milchverkaufInfo:'Si otomaatig ah ayaa looga xisaabiyaa xaddiga caanaha ee joogtada ah (tab-ka "Caano") iyo qiimaha caanaha (Dejinta). Haddii maalin la iibiyay wax ka badan ama ka yar, waxaad ku beddeli kartaa qadarka adigoo riixaya ✏️.',
+  thMilchmenge:'Xaddiga (kg)', thBerechnet:'La Xisaabiyay', thTatsaechlich:'Dhabta ah', buchungenTitle:'Diiwaanka Gacanta', noMilchverkauf:'Weli xaddig caano ah lama diiwaan gelin.',
+  fMilchverkaufEdit:'Wax ka beddel Iibinta Caanaha', lMilchmenge:'Xaddiga Caanaha', lTatsaechlicherBetrag:'Qadarka Dhabta ah',
+  hintMilchBetrag:'Si otomaatig ah ayaa looga xisaabiyaa xaddiga × qiimaha caanaha. Haddii loo baahdo wax ka beddel.', btnAutoBerechnen:'Si otomaatig ah u xisaabi',
+  milchrateTitle:'Xaddiga Caanaha ee Joogtada ah', addMilchrate:'Ku dar Xilli',
+  milchrateInfo:'Sac kasta geli xilli uu maalin kasta ku bixiyo xaddig joogto ah oo caano ah (tusaale: laga bilaabo 01.03 ilaa 15.04 maalin kasta 18 kg). Haddii aad "Ilaa" banaan ka tagto, xaddigu wuxuu socon doonaa ilaa mar kale. Gelinta maalinlaha ah looma baahna – app-ku si otomaatig ah ayuu maalin kasta u isticmaali doonaa.',
+  thKgProTag:'kg/Maalin', thSeit:'Laga bilaabo', thVon:'Laga bilaabo', thBis:'Ilaa', noMilchrate:'Weli xilli lama dejin.',
+  fMilchrateNew:'Ku dar Xilli', fMilchrateEdit:'Wax ka beddel Xilliga', lSeitDatum:'Laga bilaabo (Taariikh) *', lBisDatum:'Ilaa (Taariikh, ikhtiyaari)',
+  hintMilchrateVon:'Goorma ayuu xaddigan khuseeyaa?', hintMilchrateBis:'Banaan ka tag haddii xaddigu socon doono ilaa mar kale.', lKgProTag:'kg maalin kasta',
+  hintMilchrateKg:'Si otomaatig ah ayaa loo isticmaali doonaa maalin kasta ee xilligan gudihiisa ah.', confDelMilchrate:'Xilligan tirtir?', milchrateOngoing:'socda',
+  fixkostenTitle:'Kharashaadka Joogtada ah (Bil kasta)', addFixkosten:'Deji Kharashka Joogtada ah',
+  fixkostenInfo:'Kharashyada isku mid ah bil kasta (tusaale mushaharka shaqaalaha). Hal mar ku qor – app-ku wuxuu si otomaatig ah bil kasta u isticmaali doonaa ilaa aad qadar cusub gasho.',
+  thBetragProMonat:'Qadarka/Bishii', thSeitMonat:'Laga bilaabo', noFixkosten:'Weli kharash joogto ah lama dejin.',
+  fFixkostenNew:'Deji Kharashka Joogtada ah', fFixkostenEdit:'Wax ka beddel Kharashka', lSeitMonat:'Laga bilaabo Bisha',
+  hintFixkostenVon:'Bishee ayuu qadarkani khuseeyaa? Bilihii hore isma beddelaan.', lBetragProMonat:'Qadarka Bishii kasta',
+  hintFixkostenBetrag:'Si otomaatig ah ayaa loo isticmaali doonaa bil kasta ilaa qadar cusub la geliyo.', confDelFixkosten:'Kharashka joogtada ah ee qaybtan tirtir?',
+  futterpreisTitle:'Qiimaha Quudka (Hadda)', addFutterpreis:'Deji Qiimaha',
+  futterpreisInfo:'Alaab kasta (tusaale Hay, Hadhuudh) qiimaha hadda ee unug kasta dejiso. Marka aad iibsi geliso, qiimaha si otomaatig ah ayaa loo buuxin doonaa. Haddii qiimuhu kordho, qiimaha cusub geli – iibsiyadii hore isma beddelaan.',
+  noFutterpreis:'Weli qiimaha quudka lama dejin.', fFutterpreisNew:'Deji Qiimaha', fFutterpreisEdit:'Wax ka beddel Qiimaha',
+  lPreisProEinheit:'Qiimaha Unugga', hintFutterpreisArtikel:'Magaca alaabta (tusaale Hay, Hadhuudh).',
+  hintFutterpreisBetrag:'Si otomaatig ah ayaa loo isticmaali doonaa marka la geliyo iibsiga.', hintFutterpreisVon:'Goorma ayuu qiimahani khuseeyaa? Iibsiyadii hore isma beddelaan.',
+  confDelFutterpreis:'Qiimaha quudka ee alaabtan tirtir?',
+  hintMilchKgRate:'Si otomaatig ah ayaa looga qaadan doonaa xaddiga joogtada ah ee sacan, haddii la dejiyay. Haddii loo baahdo wax ka beddel.',
+  hintFixkostenAktiv:'ℹ️ Qaybtan waxaa horeba u shaqeynaya Fixkosten otomaatig ah: {n}/Bishii laga bilaabo {d}. Xisaabtan waxaa lagu darayaa si dheeri ah.',
+  stammbaumTitle:'Abtirsiinta', unbekannt:'Lama Ogi',
+  lMutterText:'Hooyo (haddii aan liiska ku jirin)', lVaterText:'Aabbe (haddii aan liiska ku jirin)',
+  lMutterUnbekannt:'Hooyo lama oga', lVaterUnbekannt:'Aabbe lama oga (tusaale la iibsaday ama beerin aan la ogayn)',
+  hintElternText:'Haddii xayawaanku aanu liiska ku jirin, halkan magaca/sharaxaadda geli.',
+  lVaterBulle:'Aabbe (Dibi ka liiska)', lVaterInfo:'Aabbe (Macluumaad Tixraac)', lMutterInfo:'Hooyo (Macluumaad Tixraac)',
+  hintBulleInfo:'Macluumaad qoraal ah oo ku saabsan abtirsiinta dibigan, haddii la ogyahay (tusaale ka mid ah kaydka beerinta).',
+  warnInzucht:'⚠️ Digniin: Dibigan waa aabbaha {n}! Fadlan dooro dibi kale si aad uga fogaato dhalmada isqaraabada.'
+},
+am:{
+  appTitle:'ስቶልቡች ፕሮ', appTagline:'ሙያዊ የከብት እርባታ አስተዳደር', saved:'ተቀምጧል ✓', logoutBtn:'ውጣ',
+  navDash:'አጠቃላይ እይታ', navKuehe:'ላሞች', navKaelber:'ጥጆች', navBullen:'በሬዎች', navBes:'ማዳቀል', navBrunst:'ፍታ', navHealth:'ጤና', navMilch:'ወተት', navDaten:'ውሂብ',
+  dashTitle:'አጠቃላይ እይታ', upcomingCalv:'የሚመጡ ውልደቶች', waitingBes:'ከወለዱ በኋላ የመጠባበቂያ ጊዜ', upcomingHeat:'ፍታ (ቀጣይ 7 ቀናት)', milkTodayTitle:'የዛሬ ወተት (አማካይ በላም)', recentHealth:'የቅርብ ጊዜ ሕክምናዎች',
+  statAktiv:'ንቁ ላሞች', statTraechtig:'እርጉዝ', statKaelber:'ጥጆች', statBullen:'በሬዎች', statHealth:'ሕክምናዎች',
+  noCalv:'እርጉዝ ላም የለም.', noWait:'በመጠባበቂያ ጊዜ ላይ ላም የለም.', noHeat:'በ7 ቀናት ውስጥ ፍታ የለም.', noMilkToday:'ዛሬ እስካሁን ወተት አልተመዘገበም.', noHealth:'ምንም ሕክምና አልተመዘገበም.',
+  overdueSince:'ቀነ ገደቡ አልፏል {n} ቀናት', todayExp:'ዛሬ ይጠበቃል', inDays:'በ{n} ቀናት ውስጥ', inDaysDate:'{n} ቀናት – {d}', waitReady:'ለማዳቀል ዝግጁ ነው!', waitDaysLeft:'{n} ቀናት ቀርተዋል',
+  milkedCount:'{n} ላሞች ታልበዋል', milkTotal:'{s} ኪግ ጠቅላላ · አማካይ {a} ኪግ',
+  kueheTitle:'ላሞች', searchPh:'በስም ወይም ቁጥር ፈልግ…', addKuh:'ላም ጨምር',
+  thName:'ስም', thNr:'ቁጥር', thRasse:'ዝርያ', thGeb:'የትውልድ ቀን', thLakt:'ወተት ዙር', thGewicht:'ክብደት', thStatus:'ሁኔታ', thNotizen:'ማስታወሻ',
+  thKuh:'ላም', thBulle:'በሬ', thDatum:'ቀን', thErwKalb:'የሚጠበቅ የመውለጃ ቀን', thMutter:'እናት', thVater:'አባት', thGeschlecht:'ጾታ',
+  thDatumBeo:'የታየበት ቀን', thTier:'እንስሳ', thDiagnose:'ምርመራ', thMedikament:'መድሃኒት', thTierarzt:'የእንስሳት ሐኪም', thNaechster:'ቀጣይ ቀጠሮ',
+  thMilch:'ወተት (ኪግ)', thFutter:'መኖ (ኪግ)', thFutterArt:'ዓይነት መኖ', thEffizienz:'ብቃት', thAlter:'እድሜ', thBesStatus:'ማዳቀል',
+  ageDays:'ቀናት', ageMonths:'ወራት', ageYears:'ዓመታት', lFutterArt:'ዓይነት መኖ', besLinked:'የተዳቀለው በ{d}', linkedFromBrunst:'ይህ ማዳቀል ከታየ ፍታ ጋር የተያያዘ ነው.',
+  lFutterItems:'የመኖ ዓይነቶች (ዓይነት + ኪግ)', addFutterRow:'የመኖ ዓይነት ጨምር',
+  noKuehe:'እስካሁን ላም የለም. "+ ላም ጨምር" ይጫኑ.', noKaelber:'እስካሁን ጥጃ የለም.', noBullen:'እስካሁን በሬ የለም.', noBes:'እስካሁን ማዳቀል አልተመዘገበም.', noBrunst:'እስካሁን ፍታ አልተመዘገበም.', noHealthRec:'እስካሁን ሕክምና አልተመዘገበም.', noForecast:'እስካሁን የፍታ መረጃ የለም.',
+  kaelberTitle:'ጥጆች', addKalb:'ጥጃ ጨምር',
+  bullenTitle:'በሬዎች', addBulle:'በሬ ጨምር',
+  besTitle:'ማዳቀል እና እርግዝና', addBes:'ማዳቀል መዝግብ',
+  brunstTitle:'የፍታ ቀን መቁጠሪያ', addBrunst:'ፍታ መዝግብ', forecastTitle:'ትንበያ – ቀጣይ ፍታ', lastHeat:'የመጨረሻ ፍታ: {d}',
+  healthTitle:'ጤና እና ሕክምናዎች', addHealth:'ሕክምና መዝግብ',
+  milchTitle:'ወተት', addMilch:'የዕለት መዝገብ',
+  milchInfo:'በየቀኑ ለእያንዳንዷ ላም የወተት መጠን (ኪግ) እና የመኖ መጠን (ኪግ) ያስመዝግቡ። መተግበሪያው በራስ-ሰር የቀን፣ የወር እና የወተት ዙር ድምርን እንዲሁም ካለፈው ወተት ዙር ጋር ያለውን አዝማሚያ ያሰላል።',
+  allEntries:'ሁሉም መዝገቦች', searchKuhPh:'ላም ፈልግ…', noMilkEntries:'እስካሁን የወተት መጠን የተያዘላት ላም የለችም. "+ ጊዜ ጨምር" ይጫኑ.',
+  heute:'ዛሬ', diesenMonat:'በዚህ ወር', aktuelleLakt:'የአሁኑ ወተት ዙር', keineVorlaktation:'ያለፈ ወተት ዙር የለም', trendVs:'ከወተት ዙር #{n} ጋር ሲነፃፀር',
+  fMilchNew:'የዕለት መዝገብ ወተት እና መኖ', fMilchEdit:'መዝገብ አስተካክል',
+  lKuh:'ላም *', lDatumStar:'ቀን *', lMilchKg:'ወተት (ኪግ) *', lFutterKg:'መኖ (ኪግ)', lLaktNr:'የወተት ዙር ቁጥር', hintLaktNr:'ባዶ ከተተወ ከላሚቱ በራስ-ሰር ይወሰዳል.',
+  confDelMilch:'መዝገብ ይሰረዝ?',
+  datenTitle:'ውሂብ እና ቅንብሮች', exportTitle:'ላክ / አስገባ', exportInfo:'ውሂብዎን በየጊዜው እንደ JSON ፋይል ያስቀምጡ.', exportBtn:'ውሂብ ላክ (.json)', importBtn:'ውሂብ አስገባ',
+  settingsTitle:'ቅንብሮች', settingWaitLabel:'ከወለዱ በኋላ የመጠባበቂያ ጊዜ', settingWaitSub:'እስከ ቀጣይ ማዳቀል ያሉ ቀናት (ነባሪ: 42)', settingCycleLabel:'የፍታ ዑደት', settingCycleSub:'ቀናት (ነባሪ: 21)',
+  settingPwLabel:'የመግቢያ የይለፍ ቃል', settingPwSub:'የመግቢያ ገጽ የይለፍ ቃል ይቀይሩ', changePwBtn:'ቀይር',
+  datenWarn:'ማስጠንቀቂያ: ውሂብ ማስገባት ሁሉንም የአሁኑን ውሂብ ይተካል. አስቀድመው ያውጡ!', clearBtn:'ሁሉንም ውሂብ ሰርዝ', footerTxt:'ከመስመር ውጪ የሚሰራ · ውሂብ ከዚህ መሳሪያ አይወጣም',
+  edit:'አስተካክል', del:'ሰርዝ', promote:'እንደ ላም ውሰድ', print:'አትም',
+  printOn:'የታተመው', printBes:'ማዳቀል', printBrunst:'የፍታ ታሪክ', printHealth:'ሕክምናዎች', printMilch:'ወተት እና መኖ', printCalves:'ጥጆች', pNone:'ምንም መዝገብ የለም.',
+  statusAktiv:'ንቁ', statusTraechtig:'እርጉዝ (በእጅ)', statusTrocken:'ወተት የማይሰጥ', statusVerkauft:'ተሽጧል/ሄዷል', statusWarte:'የመጠባበቂያ ጊዜ',
+  besDurch:'ተከናውኗል', besTrae:'እርግዝና ተረጋግጧል', besNicht:'አልተሳካም', besAbge:'ወልዳለች',
+  fKuhNew:'አዲስ ላም', fKuhEdit:'ላም አስተካክል', fKalbNew:'አዲስ ጥጃ', fKalbEdit:'ጥጃ አስተካክል',
+  fBulleNew:'አዲስ በሬ', fBulleEdit:'በሬ አስተካክል', fBesNew:'ማዳቀል መዝግብ', fBesEdit:'ማዳቀል አስተካክል',
+  fBrunstNew:'ፍታ መዝግብ', fBrunstEdit:'ፍታ አስተካክል', fHealthNew:'ሕክምና መዝግብ', fHealthEdit:'ሕክምና አስተካክል',
+  lName:'ስም *', lNr:'ቁጥር (የጆሮ ምልክት)', lRasse:'ዝርያ', lGeb:'የትውልድ ቀን', lStatus:'ሁኔታ', lNotizen:'ማስታወሻ', lGewicht:'ክብደት (ኪግ)', lLakt:'የወተት ዙር ቁጥር',
+  lMutter:'እናት', lVater:'አባት (በሬ)', lGeschlecht:'ጾታ', lBulle:'በሬ (ከዝርዝሩ)', lBulleText:'በዝርዝሩ ውስጥ ከሌለ: ስም', lDatum:'ቀን *', lErwKalb:'የሚጠበቅ የመውለጃ ቀን',
+  lDiagnose:'ምርመራ / ሕክምና', lMedikament:'መድሃኒት / መጠን', lTierarzt:'የእንስሳት ሐኪም', lNaechster:'ቀጣይ ቀጠሮ', lTier:'እንስሳ', lTierName:'በዝርዝሩ ውስጥ ከሌለ: ስም', lDatumBeo:'የታየበት ቀን *',
+  weiblich:'ሴት', maennlich:'ወንድ', optWaehl:'– ይምረጡ –', optUnbek:'– የማይታወቅ –', optFreitext:'– ከታች ነፃ ጽሁፍ –',
+  hintKalb:'ባዶ ከተተወ ሲቀመጥ በራስ-ሰር ይሰላል (ከማዳቀል ቀን በኋላ 283 ቀናት).',
+  cancel:'ሰርዝ', save:'አስቀምጥ',
+  confDelKuh:'በርግጥ ላሚቱ ይሰረዝ?', confDelKalb:'ጥጃ ይሰረዝ?', confDelBulle:'በሬ ይሰረዝ?', confDelBes:'ማዳቀል ይሰረዝ?', confDelBrunst:'ፍታ ይሰረዝ?', confDelHealth:'ሕክምና ይሰረዝ?',
+  confPromote:'"{n}" እንደ ላም ይወሰድ?', confImport:'ሁሉም ውሂብ ይተካል. ይቀጥሉ?', confClear1:'ሁሉንም ውሂብ ይሰርዙ – መመለስ አይቻልም!', confClear2:'በርግጥ ሁሉንም ይሰረዝ?',
+  importOk:'ውሂብ ገብቷል!', importErr:'ፋይሉ ልክ አይደለም.', saveErr:'ማስቀመጥ አልተሳካም – ውሂብዎን ያውጡ!',
+  lockSubNew:'አዲስ የይለፍ ቃል ያዘጋጁ (ቢያንስ 4 ፊደላት)', lockSubLogin:'እባክዎ የይለፍ ቃል ያስገቡ', lockPwPh:'የይለፍ ቃል', lockPwPh2:'የይለፍ ቃል ይድገሙ', lockBtn:'ቀጥል',
+  lockHint:'የይለፍ ቃሉ የሚቀመጠው በዚህ አሳሽ ውስጥ ብቻ ነው – አገልጋይ አያስፈልግም, ምንም መጫን አያስፈልግም. በ"ውሂብ" ትር ውስጥ ሊቀየር ይችላል.',
+  lockErrShort:'ቢያንስ 4 ፊደላት.', lockErrMismatch:'የይለፍ ቃላት አይመሳሰሉም.', lockErrWrong:'የተሳሳተ የይለፍ ቃል.',
+  pwPromptCurrent:'የአሁኑን የይለፍ ቃል ያስገቡ:', pwPromptNew:'አዲስ የይለፍ ቃል (ቢያንስ 4 ፊደላት):', pwPromptRepeat:'አዲሱን የይለፍ ቃል ይድገሙ:',
+  pwErrWrong:'የተሳሳተ የይለፍ ቃል.', pwErrShort:'ቢያንስ 4 ፊደላት.', pwErrMismatch:'የይለፍ ቃላት አይመሳሰሉም.', pwChanged:'የይለፍ ቃል ተቀይሯል.',
+  navErgaenzung:'ተጨማሪ ምግብ', navEinkauf:'ግዢዎች',
+  dryOffTitle:'ወተት ማቆም', ergaenzungDueTitle:'ተጨማሪ ምግብ የሚደርስበት', noDryOff:'ወተት ማቆም የሚያስፈልጋት ላም የለችም.', noErgaenzungDue:'በሚቀጥሉት ቀናት ውስጥ የሚደርስ ተጨማሪ ምግብ የለም.',
+  ergResumesIn:'እረፍቱ በ{n} ቀናት ውስጥ ያበቃል', ergPauseIn:'እረፍቱ በ{n} ቀናት ውስጥ ይጀምራል',
+  settingDryLabel:'ከመውለድ በፊት ወተት የማቆሚያ ጊዜ', settingDrySub:'ከሚጠበቀው የመውለጃ ቀን በፊት ያሉ ቀናት (ነባሪ: 60)',
+  lTrockenSeit:'ወተት የቆመው ከመቼ ጀምሮ', hintTrocken:'አማራጭ: ላሚቱ ወተት የቆመችበትን ቀን ያስገቡ.', hintTrockenSuggest:'የሚመከረው: {d} (በሚጠበቀው የመውለጃ ቀን መሰረት). ቀደም ብሎ ማቆም ሁልጊዜ ይቻላል.',
+  ergaenzungTitle:'ተጨማሪ ምግብ (ማዕድናት እና እህል)', addErgaenzung:'ተጨማሪ ምግብ መዝግብ',
+  ergaenzungInfo:'ለእያንዳንዱ እንስሳ ማዕድናት ወይም እህል ያስመዝግቡ: መጠን፣ የመጀመሪያ ቀን፣ ለስንት ቀናት እንደሚሰጥ እና ለስንት ቀናት እረፍት እንደሚደረግ። መተግበሪያው በራስ-ሰር አሁን እየተሰጠ ወይም እረፍት ላይ መሆኑን እና መቼ እንደሚቀጥል ያሰላል።',
+  thErgArt:'ዓይነት', thErgName:'ስም', thErgMenge:'መጠን', thErgStart:'መጀመሪያ', thErgDauerPause:'አሰጣጥ/እረፍት (ቀናት)', thErgStatus:'ሁኔታ',
+  noErgaenzung:'እስካሁን ተጨማሪ ምግብ አልተመዘገበም.', ergTypMineral:'ማዕድናት', ergTypGetreide:'እህል', ergTypSonstiges:'ሌላ',
+  ergStartsIn:'በ{n} ቀናት ውስጥ ይጀምራል', ergActive:'እየተሰጠ ነው · {n} ቀናት ቀርተዋል', ergPaused:'እረፍት · {n} ቀናት ቀርተዋል',
+  fErgNew:'ተጨማሪ ምግብ መዝግብ', fErgEdit:'ተጨማሪ ምግብ አስተካክል', lErgTyp:'ዓይነት', lErgName:'ስም', lErgMenge:'መጠን', lErgEinheit:'መለኪያ',
+  lErgStart:'የመጀመሪያ ቀን', lErgDauer:'አሰጣጥ (ቀናት)', lErgPause:'እረፍት (ቀናት)', hintErgPause:'እረፍቱ ካለቀ በኋላ መተግበሪያው በራስ-ሰር እንደገና "እየተሰጠ ነው" ያሳያል.',
+  confDelErgaenzung:'ተጨማሪ ምግብ ይሰረዝ?',
+  einkaufTitle:'ግዢዎች', addEinkauf:'ግዢ መዝግብ', einkaufTotal:'ጠቅላላ',
+  thArtikel:'እቃ', thMenge:'መጠን', thEinheit:'መለኪያ', thPreis:'ዋጋ', thPreisEinheit:'ዋጋ/መለኪያ',
+  noEinkauf:'እስካሁን ግዢ አልተመዘገበም.', fEinkaufNew:'ግዢ መዝግብ', fEinkaufEdit:'ግዢ አስተካክል',
+  lArtikel:'እቃ', lMenge:'መጠን', lEinheit:'መለኪያ (ለምሳሌ ኪግ፣ ሊትር፣ ከረጢት)', lPreis:'ዋጋ (ጠቅላላ)',
+  hintPreis:'ለዚህ ግዢ ጠቅላላ ዋጋ፣ የነጠላ መለኪያ ዋጋ አይደለም.', confDelEinkauf:'ግዢ ይሰረዝ?',
+  ergaenzungEmpfehlung:'ምክር: ወተት እየሰጡ ያሉ ላሞች – በቀን 250 ml የኖራ ውሃ (ካልሲየም) + 1 ኪግ የስንዴ ብራን በላም። እርጉዝ ላሞች – እንዲሁ 250 ml የኖራ ውሃ + 1 ኪግ የስንዴ ብራን፣ እስከ ሚጠበቀው የመውለጃ ቀን 6 ሳምንታት በፊት፣ ከዚያም በወተት ማቆሚያ ጊዜ እረፍት፣ ከወለዱ በኋላ ወዲያውኑ እንደገና የኖራ ውሃ ይስጡ። ጥጆች – በቀን 100 ml የኖራ ውሃ (ካልሲየም) + 0.3 ኪግ የስንዴ ብራን (ፎስፎረስ) በጥጃ። ከታች ባለው ፎርም ውስጥ ያለውን ፈጣን ምርጫ ተጠቅመው እነዚህን ዋጋዎች በራስ-ሰር መውሰድ ይችላሉ.',
+  lErgPreset:'ምክር ውሰድ', presetLaktKalk:'ወተት የምትሰጥ ላም – የኖራ ውሃ (250 ml)', presetLaktKleie:'ወተት የምትሰጥ ላም – የስንዴ ብራን (1 ኪግ)',
+  presetTraechtigKalk:'እርጉዝ ላም – የኖራ ውሃ (እስከ 6 ሳምንት ከመውለድ በፊት)', presetTraechtigKleie:'እርጉዝ ላም – የስንዴ ብራን (እስከ 6 ሳምንት ከመውለድ በፊት)',
+  presetKalbKalk:'ጥጃ – የኖራ ውሃ (100 ml)', presetKalbKleie:'ጥጃ – የስንዴ ብራን (0.3 ኪግ)',
+  lDatumBis:'እስከ ቀን (አማራጭ)', hintDatumBis:'ለብዙ ቀናት ሕክምና/የመርፌ ኮርስ: የመጨረሻውን ቀን ያስገቡ.', healthDayOf:'ቀን {n}/{m}',
+  navFinanzen:'ፋይናንስ', settingCurrencyLabel:'ገንዘብ', settingCurrencySub:'ለፋይናንስ እና ግዢዎች',
+  finanzenTitle:'ፋይናንስ', addFinanz:'ግቤት መዝግብ',
+  finanzenInfo:'ገቢ (ለምሳሌ የወተት ሽያጭ፣ የከብት ሽያጭ) እና ወጪ (ለምሳሌ የሰራተኛ ወጪ፣ ጥገና) ያስመዝግቡ። ከ"ግዢዎች" ትር የመኖ እና ተጨማሪ ምግብ ግዢዎች በራስ-ሰር እንደ ወጪ ይታሰባሉ.',
+  chartAusgaben:'ወጪ በምድብ', chartEinnahmen:'ገቢ በምድብ',
+  thTyp:'ዓይነት', thKategorie:'ምድብ', thBeschreibung:'መግለጫ', thBetrag:'መጠን',
+  noFinanzen:'እስካሁን ግቤት አልተመዘገበም.', gesamtEinnahmen:'ጠቅላላ ገቢ', gesamtAusgaben:'ጠቅላላ ወጪ', gewinnVerlust:'ትርፍ/ኪሳራ',
+  katMitarbeiter:'የሰራተኛ ወጪ', katReparatur:'ጥገና', katTierarzt:'የእንስሳት ሐኪም/ጤና', katSonstigeAusgabe:'ሌላ ወጪ',
+  katMilchverkauf:'የወተት ሽያጭ', katTierverkauf:'የከብት ሽያጭ', katSonstigeEinnahme:'ሌላ ገቢ', katEinkauf:'መኖ እና ግዢዎች',
+  typAusgabe:'ወጪ', typEinnahme:'ገቢ', fFinanzNew:'ግቤት መዝግብ', fFinanzEdit:'ግቤት አስተካክል',
+  lTyp:'ዓይነት', lKategorie:'ምድብ', lBeschreibung:'መግለጫ', lBetrag:'መጠን', confDelFinanz:'ግቤት ይሰረዝ?',
+  settingMilchpreisLabel:'የወተት ዋጋ በኪግ', settingMilchpreisSub:'ለወተት ሽያጭ ራስ-ሰር ስሌት',
+  monatTitle:'ወርሃዊ አጠቃላይ እይታ', thMonat:'ወር', thEinnahmenKurz:'ገቢ', thAusgabenKurz:'ወጪ', thGewinn:'ትርፍ/ኪሳራ',
+  milchverkaufTitle:'የዕለት ወተት ሽያጭ', milchverkaufInfo:'ከቋሚው የወተት መጠን (ትር "ወተት") እና ከወተት ዋጋ (ቅንብሮች) በራስ-ሰር ይሰላል። በአንድ ቀን የበለጠ ወይም ያነሰ ከተሸጠ በ✏️ መጠኑን ማስተካከል ይችላሉ።',
+  thMilchmenge:'መጠን (ኪግ)', thBerechnet:'የተሰላ', thTatsaechlich:'ትክክለኛ', buchungenTitle:'በእጅ የተመዘገቡ', noMilchverkauf:'እስካሁን የወተት መጠን አልተመዘገበም.',
+  fMilchverkaufEdit:'የወተት ሽያጭ አስተካክል', lMilchmenge:'የወተት መጠን', lTatsaechlicherBetrag:'ትክክለኛ መጠን',
+  hintMilchBetrag:'ከመጠን × የወተት ዋጋ በራስ-ሰር ይሰላል። አስፈላጊ ከሆነ ያስተካክሉ.', btnAutoBerechnen:'በራስ-ሰር ስላ',
+  milchrateTitle:'ቋሚ የወተት መጠን', addMilchrate:'ጊዜ ጨምር',
+  milchrateInfo:'ለእያንዳንዷ ላም፣ በየቀኑ ተመሳሳይ ቋሚ የወተት መጠን የምትሰጥበትን ጊዜ ያስገቡ (ለምሳሌ ከ01.03 እስከ 15.04 በየቀኑ 18 ኪግ)። "እስከ" ባዶ ከተተወ መጠኑ እስከሚቀየር ድረስ ይቀጥላል። በየቀኑ መመዝገብ አያስፈልግም – መተግበሪያው በራስ-ሰር በየቀኑ ይህንኑ ይጠቀማል።',
+  thKgProTag:'ኪግ/ቀን', thSeit:'ጀምሮ', thVon:'ከ', thBis:'እስከ', noMilchrate:'እስካሁን ጊዜ አልተዘጋጀም.',
+  fMilchrateNew:'ጊዜ ጨምር', fMilchrateEdit:'ጊዜ አስተካክል', lSeitDatum:'ከ (ቀን) *', lBisDatum:'እስከ (ቀን፣ አማራጭ)',
+  hintMilchrateVon:'ይህ መጠን ከመቼ ጀምሮ ይሰራል?', hintMilchrateBis:'መጠኑ እስከሚቀየር ድረስ የሚቀጥል ከሆነ ባዶ ይተዉት.', lKgProTag:'ኪግ በቀን',
+  hintMilchrateKg:'በዚህ ጊዜ ውስጥ ላለ ለእያንዳንዱ ቀን በራስ-ሰር ይጠቅማል.', confDelMilchrate:'ይህን ጊዜ ይሰረዝ?', milchrateOngoing:'በመቀጠል ላይ',
+  fixkostenTitle:'ቋሚ ወጪዎች (ተደጋጋሚ)', addFixkosten:'ቋሚ ወጪ አዘጋጅ',
+  fixkostenInfo:'በየወሩ ተመሳሳይ ለሚሆኑ ወጪዎች (ለምሳሌ የሰራተኛ ደመወዝ). አንድ ጊዜ ያስገቡ – መተግበሪያው በራስ-ሰር በየወሩ ይህንኑ ይጠቀማል፣ አዲስ መጠን እስኪያስገቡ ድረስ.',
+  thBetragProMonat:'መጠን/ወር', thSeitMonat:'ጀምሮ', noFixkosten:'እስካሁን ቋሚ ወጪ አልተዘጋጀም.',
+  fFixkostenNew:'ቋሚ ወጪ አዘጋጅ', fFixkostenEdit:'ቋሚ ወጪ ቀይር', lSeitMonat:'ከወር ጀምሮ',
+  hintFixkostenVon:'ይህ መጠን ከየትኛው ወር ጀምሮ ይሰራል? ያለፉት ወሮች አይቀየሩም.', lBetragProMonat:'መጠን በወር',
+  hintFixkostenBetrag:'አዲስ መጠን እስኪገባ ድረስ በራስ-ሰር በየወሩ እንደ ወጪ ይጠቅማል.', confDelFixkosten:'የዚህን ምድብ ቋሚ ወጪ ይሰረዝ?',
+  futterpreisTitle:'የመኖ ዋጋዎች (የአሁኑ)', addFutterpreis:'ዋጋ አዘጋጅ',
+  futterpreisInfo:'ለእያንዳንዱ ዕቃ (ለምሳሌ ድርቆሽ፣ እህል) የአሁኑን ዋጋ በአሃድ ያዘጋጁ። ግዢ ሲያስገቡ ዋጋው በራስ-ሰር ይሞላል። ዋጋው ቢጨምር አዲሱን ዋጋ ብቻ ያስገቡ – ያለፉት ግዢዎች አይቀየሩም.',
+  noFutterpreis:'እስካሁን የመኖ ዋጋ አልተዘጋጀም.', fFutterpreisNew:'ዋጋ አዘጋጅ', fFutterpreisEdit:'ዋጋ ቀይር',
+  lPreisProEinheit:'ዋጋ በአሃድ', hintFutterpreisArtikel:'የዕቃው ስም (ለምሳሌ ድርቆሽ፣ እህል).',
+  hintFutterpreisBetrag:'ግዢ ሲመዘገብ በራስ-ሰር እንደ ጥቆማ ይጠቅማል.', hintFutterpreisVon:'ይህ ዋጋ ከመቼ ጀምሮ ይሰራል? ያለፉት ግዢዎች አይቀየሩም.',
+  confDelFutterpreis:'የዚህን ዕቃ የመኖ ዋጋ ይሰረዝ?',
+  hintMilchKgRate:'ለዚህች ላም ቋሚ የዕለት መጠን ከተዘጋጀ በራስ-ሰር ከዚያ ይወሰዳል። አስፈላጊ ከሆነ ያስተካክሉ.',
+  hintFixkostenAktiv:'ℹ️ ለዚህ ምድብ አስቀድሞ ቋሚ ወጪ ራስ-ሰር ንቁ ነው፦ {n}/ወር ከ{d} ጀምሮ። ይህ ግቤት ተጨማሪ ሆኖ ይቆጠራል.',
+  stammbaumTitle:'የዘር ሐረግ', unbekannt:'የማይታወቅ',
+  lMutterText:'እናት (በዝርዝሩ ውስጥ ከሌለ)', lVaterText:'አባት (በዝርዝሩ ውስጥ ከሌለ)',
+  lMutterUnbekannt:'እናት አትታወቅም', lVaterUnbekannt:'አባት አይታወቅም (ለምሳሌ የተገዛ ወይም ያልታወቀ ማዳቀል)',
+  hintElternText:'እንስሳው በዝርዝሩ ውስጥ ከሌለ፣ እዚህ ስም/መግለጫ ያስገቡ.',
+  lVaterBulle:'አባት (በሬ ከዝርዝሩ)', lVaterInfo:'አባት (ማጣቀሻ መረጃ)', lMutterInfo:'እናት (ማጣቀሻ መረጃ)',
+  hintBulleInfo:'ስለዚህ በሬ የዘር ሐረግ የጽሁፍ መረጃ፣ ከታወቀ (ለምሳሌ ከማዳቀል ካታሎግ).',
+  warnInzucht:'⚠️ ማስጠንቀቂያ: ይህ በሬ የ{n} አባት ነው! እባክዎ የዝምድና መተላለፍን ለማስወገድ ሌላ በሬ ይምረጡ.'
+}
+};
+let lang='so';
+const SUPPORTED_LANGS=['so','de','en'];
+function t(key,vars){
+  let s=(T[lang]&&T[lang][key])||(T.de&&T.de[key])||key;
+  if(vars) for(const k in vars) s=s.replace('{'+k+'}',vars[k]);
+  return s;
+}
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.getAttribute('data-i18n'));});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.getAttribute('data-i18n-ph'));});
+}
+function updateLangBtns(){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.getAttribute('data-lang')===lang));
+}
+function setLang(l){
+  lang=l;
+  try{localStorage.setItem('sb_lang',l);}catch(e){}
+  document.documentElement.lang=l;
+  applyI18n();
+  updateLangBtns();
+  setupLockScreen();
+  if(document.getElementById('app-root').style.display!=='none') renderAll();
+}
+
+/* ===== STATE ===== */
+let db={kuehe:[],kaelber:[],bullen:[],besamungen:[],brunst:[],health:[],milch:[],ergaenzung:[],einkauf:[],finanzen:[],milchverkauf:[],milchrate:[],fixkosten:[],futterpreis:[]};
+let settings={waitDays:42,cycleDays:21,dryOffDays:60,currency:'USD',milchpreis:0};
+const SK='stallbuch_pro_db_main';
+
+/* ===== HELPERS ===== */
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function todayStr(){const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function monthStr(iso){return (iso||'').slice(0,7);}
+function fmtD(iso){if(!iso)return '–'; const p=iso.split('-'); return p.length===3? p[2]+'.'+p[1]+'.'+p[0] : iso;}
+function addDaysIso(iso,n){const d=new Date(iso+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10);}
+function daysDiff(a,b){return Math.round((new Date(b+'T00:00:00Z')-new Date(a+'T00:00:00Z'))/86400000);}
+function byId(arr,id){return arr.find(x=>x.id===id);}
+function kuhName(id){const k=byId(db.kuehe,id); return k? k.name : '–';}
+function tierLabel(id){
+  const k=byId(db.kuehe,id); if(k)return k.name;
+  const c=byId(db.kaelber,id); if(c)return c.name;
+  const b=byId(db.bullen,id); if(b)return b.name;
+  return '–';
+}
+function fmtMoney(n){
+  n=(+n||0).toFixed(2);
+  return settings.currency==='ETB'? n+' Br' : '$'+n;
+}
+function ageStr(geb){
+  if(!geb) return '–';
+  const days=daysDiff(geb,todayStr());
+  if(days<0) return '–';
+  if(days<60) return days+' '+t('ageDays');
+  const months=Math.floor(days/30.44);
+  if(months<24) return months+' '+t('ageMonths');
+  return (days/365.25).toFixed(1)+' '+t('ageYears');
+}
+
+/* ===== STORAGE ===== */
+function loadDB(){
+  try{
+    const r=localStorage.getItem(SK);
+    if(r){
+      const p=JSON.parse(r);
+      db={kuehe:p.kuehe||[],kaelber:p.kaelber||[],bullen:p.bullen||[],besamungen:p.besamungen||[],brunst:p.brunst||[],health:p.health||[],milch:p.milch||[],ergaenzung:p.ergaenzung||[],einkauf:p.einkauf||[],finanzen:p.finanzen||[],milchverkauf:p.milchverkauf||[],milchrate:p.milchrate||[],fixkosten:p.fixkosten||[],futterpreis:p.futterpreis||[]};
+      if(p.settings) settings=Object.assign({},settings,p.settings);
+    }
+  }catch(e){}
+}
+function saveDB(){
+  try{localStorage.setItem(SK,JSON.stringify({...db,settings})); showSaved();}
+  catch(e){alert(t('saveErr'));}
+}
+function showSaved(){
+  const el=document.getElementById('save-ind');
+  el.classList.add('show');
+  clearTimeout(showSaved._t);
+  showSaved._t=setTimeout(()=>el.classList.remove('show'),1500);
+}
+function saveSetting(k,v){const n=parseFloat(v); settings[k]=isNaN(n)?v:n; saveDB(); renderAll();}
+
+/* ===== AUTH / LOCK SCREEN =====
+   Rein clientseitig (kein Server, keine Installation). Einfache Zugangssperre,
+   keine echte Verschlüsselung/Sicherheit. */
+const PW_KEY='sb_pwhash_main';
+const SESSION_KEY='sb_unlocked_main';
+
+function simpleHash(str){
+  let h1=0, h2=5381;
+  for(let i=0;i<str.length;i++){
+    h1=(Math.imul(31,h1)+str.charCodeAt(i))|0;
+    h2=(Math.imul(h2,33)^str.charCodeAt(i))|0;
+  }
+  return (h1>>>0).toString(36)+'_'+(h2>>>0).toString(36);
+}
+function getPwHash(){try{return localStorage.getItem(PW_KEY);}catch(e){return null;}}
+function setPwHash(h){try{localStorage.setItem(PW_KEY,h);}catch(e){}}
+function showApp(){
+  document.getElementById('lock-overlay').classList.add('hide');
+  document.getElementById('app-root').style.display='';
+}
+function hideApp(){
+  document.getElementById('lock-overlay').classList.remove('hide');
+  document.getElementById('app-root').style.display='none';
+}
+function lockApp(){
+  try{sessionStorage.removeItem(SESSION_KEY);}catch(e){}
+  hideApp();
+  setupLockScreen();
+}
+function setupLockScreen(){
+  const hash=getPwHash();
+  const pw2=document.getElementById('lock-pw2');
+  const sub=document.getElementById('lock-sub');
+  const err=document.getElementById('lock-err');
+  err.textContent='';
+  document.getElementById('lock-pw').value='';
+  pw2.value='';
+  if(!hash){
+    sub.textContent=t('lockSubNew');
+    pw2.style.display='';
+  }else{
+    sub.textContent=t('lockSubLogin');
+    pw2.style.display='none';
+  }
+  applyI18n();
+  updateLangBtns();
+  setTimeout(()=>document.getElementById('lock-pw').focus(),50);
+}
+function handleLockSubmit(e){
+  e.preventDefault();
+  const hash=getPwHash();
+  const pw=document.getElementById('lock-pw').value;
+  const err=document.getElementById('lock-err');
+  if(!hash){
+    const pw2=document.getElementById('lock-pw2').value;
+    if(pw.length<4){err.textContent=t('lockErrShort'); return false;}
+    if(pw!==pw2){err.textContent=t('lockErrMismatch'); return false;}
+    setPwHash(simpleHash(pw));
+    try{sessionStorage.setItem(SESSION_KEY,'1');}catch(e){}
+    showApp();
+    return false;
+  }
+  if(simpleHash(pw)===hash){
+    try{sessionStorage.setItem(SESSION_KEY,'1');}catch(e){}
+    showApp();
+  }else{
+    err.textContent=t('lockErrWrong');
+  }
+  return false;
+}
+function changePassword(){
+  const cur=getPwHash();
+  if(cur){
+    const oldPw=prompt(t('pwPromptCurrent'));
+    if(oldPw===null)return;
+    if(simpleHash(oldPw)!==cur){alert(t('pwErrWrong')); return;}
+  }
+  const n1=prompt(t('pwPromptNew'));
+  if(n1===null)return;
+  if(n1.length<4){alert(t('pwErrShort')); return;}
+  const n2=prompt(t('pwPromptRepeat'));
+  if(n1!==n2){alert(t('pwErrMismatch')); return;}
+  setPwHash(simpleHash(n1));
+  alert(t('pwChanged'));
+}
+
+/* ===== MODAL ===== */
+function openModal(html){document.getElementById('modal-content').innerHTML=html; document.getElementById('overlay').classList.add('show');}
+function closeModal(){document.getElementById('overlay').classList.remove('show'); document.getElementById('modal-content').innerHTML='';}
+
+/* ===== FORM HELPERS ===== */
+function ff(type,name,label,val,hint,req,extra){
+  const attrs=Object.entries(extra||{}).map(([k,v])=>k+'="'+v+'"').join(' ');
+  return'<div class="ff"><label>'+label+'</label><input type="'+type+'" name="'+name+'" value="'+esc(String(val??''))+'"'+(req?' required':'')+' '+attrs+'></div>'+(hint?'<p class="hint" style="margin-top:-10px">'+hint+'</p>':'');
+}
+function fsel(name,label,val,opts,req,extra){
+  const o=opts.map(([v,l])=>'<option value="'+esc(v)+'"'+(String(val)===String(v)?' selected':'')+'>'+esc(l)+'</option>').join('');
+  const attrs=Object.entries(extra||{}).map(([k,v])=>k+'="'+v+'"').join(' ');
+  return'<div class="ff"><label>'+label+'</label><select name="'+name+'"'+(req?' required':'')+' '+attrs+'>'+o+'</select></div>';
+}
+function fft(name,label,val){return'<div class="ff full"><label>'+label+'</label><textarea name="'+name+'">'+esc(val||'')+'</textarea></div>';}
+function fchk(name,label,checked){
+  return'<div class="ff full"><label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:400;"><input type="checkbox" name="'+name+'"'+(checked?' checked':'')+'> '+label+'</label></div>';
+}
+
+/* ===== TABS ===== */
+function showTab(tb){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tb).classList.add('active');
+  document.getElementById('nav-'+tb).classList.add('active');
+}
+
+/* ===== RENDER: MASTER ===== */
+function renderAll(){
+  renderDashboard();
+  renderKuehe();
+  renderKaelber();
+  renderBullen();
+  renderBes();
+  renderBrunst();
+  renderHealth();
+  renderMilch();
+  renderErgaenzung();
+  renderEinkauf();
+  renderFinanzen();
+}
+
+/* ===== DASHBOARD ===== */
+function renderDashboard(){
+  const grid=document.getElementById('stat-grid');
+  const aktiv=db.kuehe.filter(k=>k.status==='aktiv').length;
+  const traechtig=db.kuehe.filter(k=>k.status==='traechtig').length;
+  grid.innerHTML=[
+    ['green','🐄',aktiv,t('statAktiv')],
+    ['gold','🤰',traechtig,t('statTraechtig')],
+    ['','🐮',db.kaelber.length,t('statKaelber')],
+    ['','🐂',db.bullen.length,t('statBullen')],
+    ['red','🏥',db.health.length,t('statHealth')]
+  ].map(([cls,icon,num,label])=>'<div class="stat-card '+cls+'"><div class="stat-num">'+num+'</div><div class="stat-label">'+label+'</div><div class="stat-icon">'+icon+'</div></div>').join('');
+
+  const calvBox=document.getElementById('upcoming-calv');
+  const preg=db.besamungen.filter(b=>b.status==='traechtig' && b.erwKalb).sort((a,b)=>a.erwKalb.localeCompare(b.erwKalb));
+  calvBox.innerHTML=preg.length? preg.map(b=>{
+    const d=daysDiff(todayStr(),b.erwKalb);
+    return '<div class="alert-row"><div class="alert-name">'+esc(kuhName(b.kuhId))+'</div>'+
+      (d<0? '<span class="chip red">'+t('overdueSince',{n:-d})+'</span>' : d===0? '<span class="chip gold">'+t('todayExp')+'</span>' : '<span class="chip green">'+t('inDaysDate',{n:d,d:fmtD(b.erwKalb)})+'</span>')+'</div>';
+  }).join('') : '<p class="muted">'+t('noCalv')+'</p>';
+
+  const waitBox=document.getElementById('waiting-bes');
+  const waiting=db.kuehe.filter(k=>k.status==='warte' && k.waitUntil);
+  waitBox.innerHTML=waiting.length? waiting.map(k=>{
+    const d=daysDiff(todayStr(),k.waitUntil);
+    return '<div class="alert-row"><div><div class="alert-name">'+esc(k.name)+'</div><div class="alert-sub">'+fmtD(k.waitUntil)+'</div></div>'+(d<=0? '<span class="chip green">'+t('waitReady')+'</span>' : '<span class="chip gold">'+t('waitDaysLeft',{n:d})+'</span>')+'</div>';
+  }).join('') : '<p class="muted">'+t('noWait')+'</p>';
+
+  const heatBox=document.getElementById('upcoming-heat');
+  const forecasts=heatForecasts();
+  const soon=forecasts.filter(f=>f.days<=7).sort((a,b)=>a.days-b.days);
+  heatBox.innerHTML=soon.length? soon.map(f=>{
+    return '<div class="alert-row"><div class="alert-name">'+esc(f.name)+'</div>'+
+      (f.days<0? '<span class="chip red">'+t('overdueSince',{n:-f.days})+'</span>' : f.days===0? '<span class="chip gold">'+t('todayExp')+'</span>' : '<span class="chip blue">'+t('inDaysDate',{n:f.days,d:fmtD(f.next)})+'</span>')+'</div>';
+  }).join('') : '<p class="muted">'+t('noHeat')+'</p>';
+
+  const healthBox=document.getElementById('recent-health');
+  const recentHealth=[...db.health].sort((a,b)=>b.datum.localeCompare(a.datum)).slice(0,5);
+  healthBox.innerHTML=recentHealth.length? recentHealth.map(h=>'<div class="alert-row"><div><div class="alert-name">'+esc(h.tierName||tierLabel(h.tierId))+'</div><div class="alert-sub">'+esc(h.diagnose||'–')+' · '+healthDateRange(h)+'</div></div></div>').join('') : '<p class="muted">'+t('noHealth')+'</p>';
+
+  const dryBox=document.getElementById('dry-off');
+  const dryList=db.kuehe.filter(k=>k.status!=='trocken' && k.status!=='verkauft').map(k=>{
+    const d=suggestedDryOff(k.id); return d? {name:k.name, date:d, days:daysDiff(todayStr(),d)} : null;
+  }).filter(Boolean).sort((a,b)=>a.days-b.days);
+  dryBox.innerHTML=dryList.length? dryList.map(x=>'<div class="alert-row"><div class="alert-name">'+esc(x.name)+'</div>'+
+    (x.days<0? '<span class="chip red">'+t('overdueSince',{n:-x.days})+'</span>' : x.days===0? '<span class="chip gold">'+t('todayExp')+'</span>' : '<span class="chip green">'+t('inDaysDate',{n:x.days,d:fmtD(x.date)})+'</span>')+'</div>').join('') : '<p class="muted">'+t('noDryOff')+'</p>';
+
+  const ergBox=document.getElementById('ergaenzung-due');
+  const ergSoon=db.ergaenzung.map(e=>{const s=ergaenzungStatus(e); return {...e,...s};}).filter(e=>e.tage<=2).sort((a,b)=>a.tage-b.tage);
+  ergBox.innerHTML=ergSoon.length? ergSoon.map(e=>'<div class="alert-row"><div><div class="alert-name">'+esc(e.tierName||tierLabel(e.tierId))+' · '+esc(e.name||ergaenzungTypLabel(e.typ))+'</div></div>'+
+    (e.phase==='pause'? '<span class="chip gold">'+t('ergResumesIn',{n:e.tage})+'</span>' : '<span class="chip blue">'+t('ergPauseIn',{n:e.tage})+'</span>')+'</div>').join('') : '<p class="muted">'+t('noErgaenzungDue')+'</p>';
+}
+
+function heatForecasts(){
+  return db.kuehe.filter(k=>k.status!=='verkauft').map(k=>{
+    const events=db.brunst.filter(b=>b.kuhId===k.id).sort((a,b)=>b.datum.localeCompare(a.datum));
+    if(!events.length) return null;
+    const last=events[0].datum;
+    const next=addDaysIso(last,settings.cycleDays);
+    return {name:k.name, last, next, days:daysDiff(todayStr(),next)};
+  }).filter(Boolean);
+}
+
+/* ===== KÜHE ===== */
+function renderKuehe(){
+  const q=(document.getElementById('kuh-search')?.value||'').toLowerCase();
+  const list=db.kuehe.filter(k=>!q || k.name.toLowerCase().includes(q) || (k.nr||'').toLowerCase().includes(q));
+  const statusLabel={aktiv:t('statusAktiv'),traechtig:t('statusTraechtig'),trocken:t('statusTrocken'),verkauft:t('statusVerkauft'),warte:t('statusWarte')};
+  const tbody=document.getElementById('kuehe-tbody');
+  const cards=document.getElementById('kuehe-cards');
+  if(!list.length){
+    tbody.innerHTML='<tr><td colspan="8" class="muted">'+t('noKuehe')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noKuehe')+'</p>';
+    return;
+  }
+  tbody.innerHTML=list.map(k=>'<tr>'+
+    '<td>'+esc(k.name)+'</td><td>'+(k.nr?'<span class="eartag">'+esc(k.nr)+'</span>':'–')+'</td>'+
+    '<td>'+esc(k.rasse||'–')+'</td><td>'+fmtD(k.geb)+'</td><td>'+(k.lakt?'#'+k.lakt:'–')+'</td>'+
+    '<td>'+(k.gewicht?k.gewicht+' kg':'–')+'</td><td><span class="chip s-'+k.status+'">'+statusLabel[k.status]+'</span></td>'+
+    '<td><button class="btn icon-btn" onclick="openKuhForm(\''+k.id+'\')">✏️</button> <button class="btn icon-btn" onclick="openStammbaum(\''+k.id+'\',\'kuh\')" title="'+t('stammbaumTitle')+'">🌳</button> <button class="btn icon-btn" onclick="printKuhProfile(\''+k.id+'\')" title="'+t('print')+'">🖨</button> <button class="btn icon-btn red" onclick="deleteKuh(\''+k.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=list.map(k=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(k.name)+'</span><span class="chip s-'+k.status+'">'+statusLabel[k.status]+'</span></div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thNr')+'</div>'+(k.nr||'–')+'</div><div><div class="lbl">'+t('thRasse')+'</div>'+esc(k.rasse||'–')+'</div>'+
+    '<div><div class="lbl">'+t('thGeb')+'</div>'+fmtD(k.geb)+'</div><div><div class="lbl">'+t('thLakt')+'</div>'+(k.lakt?'#'+k.lakt:'–')+'</div></div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openKuhForm(\''+k.id+'\')">'+t('edit')+'</button><button class="btn sm secondary" onclick="openStammbaum(\''+k.id+'\',\'kuh\')">🌳 '+t('stammbaumTitle')+'</button><button class="btn sm secondary" onclick="printKuhProfile(\''+k.id+'\')">'+t('print')+'</button><button class="btn sm danger" onclick="deleteKuh(\''+k.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function suggestedDryOff(kuhId){
+  const bes=db.besamungen.filter(b=>b.kuhId===kuhId && b.status==='traechtig' && b.erwKalb).sort((a,b)=>b.datum.localeCompare(a.datum))[0];
+  return bes? addDaysIso(bes.erwKalb,-settings.dryOffDays) : null;
+}
+function openKuhForm(id){
+  const k=id? byId(db.kuehe,id) : {};
+  const suggestion=id? suggestedDryOff(id) : null;
+  const dryHint=suggestion? t('hintTrockenSuggest',{d:fmtD(suggestion)}) : t('hintTrocken');
+  const mutterOpts=[['',t('optWaehl')],...db.kuehe.filter(c=>c.id!==id).map(c=>[c.id,c.name])];
+  const vaterOpts=[['',t('optWaehl')],...db.bullen.map(b=>[b.id,b.name])];
+  openModal('<h2>'+(id?t('fKuhEdit'):t('fKuhNew'))+'</h2>'+
+    '<form onsubmit="return saveKuh(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    ff('text','name',t('lName'),k.name,'',true)+
+    ff('text','nr',t('lNr'),k.nr)+
+    ff('text','rasse',t('lRasse'),k.rasse)+
+    ff('date','geb',t('lGeb'),k.geb)+
+    ff('number','lakt',t('lLakt'),k.lakt)+
+    ff('number','gewicht',t('lGewicht'),k.gewicht)+
+    fsel('status',t('lStatus'),k.status||'aktiv',[['aktiv',t('statusAktiv')],['traechtig',t('statusTraechtig')],['trocken',t('statusTrocken')],['warte',t('statusWarte')],['verkauft',t('statusVerkauft')]],true)+
+    ff('date','trockenSeit',t('lTrockenSeit'),k.trockenSeit,dryHint)+
+    '<div class="ff full" style="border-top:1px solid var(--border); margin-top:8px; padding-top:12px;"><label style="font-weight:700;">🌳 '+t('stammbaumTitle')+'</label></div>'+
+    fsel('mutterId',t('lMutter'),k.mutterId||'',mutterOpts)+
+    ff('text','mutterText',t('lMutterText'),k.mutterText,t('hintElternText'))+
+    fchk('mutterUnbekannt',t('lMutterUnbekannt'),k.mutterUnbekannt)+
+    fsel('vaterId',t('lVater'),k.vaterId||'',vaterOpts)+
+    ff('text','vaterText',t('lVaterText'),k.vaterText,t('hintElternText'))+
+    fchk('vaterUnbekannt',t('lVaterUnbekannt'),k.vaterUnbekannt)+
+    fft('notizen',t('lNotizen'),k.notizen)+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveKuh(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={
+    id:id||uid(), name:f.name.value.trim(), nr:f.nr.value.trim(), rasse:f.rasse.value.trim(),
+    geb:f.geb.value, lakt:f.lakt.value?parseInt(f.lakt.value):null, gewicht:f.gewicht.value?parseFloat(f.gewicht.value):null,
+    status:f.status.value, trockenSeit:f.trockenSeit.value||null, notizen:f.notizen.value.trim(),
+    mutterId:f.mutterId.value||null, mutterText:f.mutterText.value.trim(), mutterUnbekannt:f.mutterUnbekannt.checked,
+    vaterId:f.vaterId.value||null, vaterText:f.vaterText.value.trim(), vaterUnbekannt:f.vaterUnbekannt.checked
+  };
+  if(id){const i=db.kuehe.findIndex(x=>x.id===id); db.kuehe[i]={...db.kuehe[i],...obj};}
+  else db.kuehe.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteKuh(id){
+  if(!confirm(t('confDelKuh')))return;
+  db.kuehe=db.kuehe.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== KÄLBER ===== */
+/* ===== ABSTAMMUNG / STAMMBAUM ===== */
+function elternLabel(tier,prefix){
+  if(tier[prefix+'Unbekannt']) return t('unbekannt');
+  const id=tier[prefix+'Id'];
+  if(id){
+    const found=prefix==='mutter'? byId(db.kuehe,id) : byId(db.bullen,id);
+    if(found) return found.name;
+  }
+  const txt=tier[prefix+'Text'];
+  if(txt) return txt;
+  if(prefix==='vater' && tier.vater) return tier.vater;
+  if(prefix==='mutter' && tier.mutter) return tier.mutter;
+  return '–';
+}
+function stammbaumHtml(tierId,tierTyp){
+  const tier=tierTyp==='kuh'? byId(db.kuehe,tierId) : byId(db.kaelber,tierId);
+  if(!tier) return '<p class="muted">–</p>';
+  const mutterLbl=elternLabel(tier,'mutter');
+  const vaterLbl=elternLabel(tier,'vater');
+  const mutterKuh=tier.mutterId? byId(db.kuehe,tier.mutterId) : null;
+  const vaterBulle=tier.vaterId? byId(db.bullen,tier.vaterId) : null;
+  const mmLbl=mutterKuh? elternLabel(mutterKuh,'mutter') : null;
+  const mvLbl=mutterKuh? elternLabel(mutterKuh,'vater') : null;
+  const vaterInfoHtml=vaterBulle&&(vaterBulle.vaterInfo||vaterBulle.mutterInfo)? ('<div class="stb-note">'+t('lVaterInfo')+': '+esc(vaterBulle.vaterInfo||'–')+' · '+t('lMutterInfo')+': '+esc(vaterBulle.mutterInfo||'–')+'</div>') : '';
+  return '<div class="stammbaum">'+
+    '<div class="stb-row"><div class="stb-box stb-self">'+esc(tier.name)+'</div></div>'+
+    '<div class="stb-row">'+
+      '<div class="stb-box">👩 '+t('lMutter')+': '+esc(mutterLbl)+
+        (mutterKuh? ('<div class="stb-sub">👵 '+t('lMutter')+': '+esc(mmLbl)+'<br>👴 '+t('lVater')+': '+esc(mvLbl)+'</div>') : '')+
+      '</div>'+
+      '<div class="stb-box">👨 '+t('lVater')+': '+esc(vaterLbl)+vaterInfoHtml+'</div>'+
+    '</div>'+
+  '</div>';
+}
+function openStammbaum(tierId,tierTyp){
+  const tier=tierTyp==='kuh'? byId(db.kuehe,tierId) : byId(db.kaelber,tierId);
+  openModal('<h2>🌳 '+t('stammbaumTitle')+' – '+esc(tier?tier.name:'')+'</h2>'+stammbaumHtml(tierId,tierTyp)+
+    '<div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button></div>');
+}
+function renderKaelber(){
+  const tbody=document.getElementById('kaelber-tbody');
+  const cards=document.getElementById('kaelber-cards');
+  if(!db.kaelber.length){
+    tbody.innerHTML='<tr><td colspan="9" class="muted">'+t('noKaelber')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noKaelber')+'</p>';
+    return;
+  }
+  const list=[...db.kaelber].sort((a,b)=>(a.geb||'9999').localeCompare(b.geb||'9999'));
+  tbody.innerHTML=list.map(k=>'<tr>'+
+    '<td>'+esc(k.name)+'</td><td>'+(k.nr||'–')+'</td><td>'+esc(elternLabel(k,'mutter'))+'</td>'+
+    '<td>'+esc(elternLabel(k,'vater'))+'</td><td>'+fmtD(k.geb)+'</td><td>'+ageStr(k.geb)+'</td><td>'+(k.gewicht?k.gewicht+' kg':'–')+'</td>'+
+    '<td>'+(k.geschlecht==='w'?t('weiblich'):k.geschlecht==='m'?t('maennlich'):'–')+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openKalbForm(\''+k.id+'\')">✏️</button> <button class="btn icon-btn" onclick="openStammbaum(\''+k.id+'\',\'kalb\')" title="'+t('stammbaumTitle')+'">🌳</button> <button class="btn icon-btn" onclick="promoteKalb(\''+k.id+'\')" title="'+t('promote')+'">⬆️</button> <button class="btn icon-btn red" onclick="deleteKalb(\''+k.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=list.map(k=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(k.name)+'</span><span class="chip blue">'+ageStr(k.geb)+'</span></div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thMutter')+'</div>'+esc(elternLabel(k,'mutter'))+'</div><div><div class="lbl">'+t('thGeb')+'</div>'+fmtD(k.geb)+'</div></div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openKalbForm(\''+k.id+'\')">'+t('edit')+'</button><button class="btn sm secondary" onclick="openStammbaum(\''+k.id+'\',\'kalb\')">🌳 '+t('stammbaumTitle')+'</button><button class="btn sm secondary" onclick="promoteKalb(\''+k.id+'\')">'+t('promote')+'</button><button class="btn sm danger" onclick="deleteKalb(\''+k.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function updateKalbVaterVorschlag(form){
+  if(form.vaterId.value||form.vaterText.value||form.vaterUnbekannt.checked) return;
+  const mutterId=form.mutterId.value;
+  if(!mutterId) return;
+  const bes=db.besamungen.filter(b=>b.kuhId===mutterId && b.status==='abgekalbt').sort((a,b)=>b.datum.localeCompare(a.datum))[0];
+  if(bes){
+    if(bes.bulleId) form.vaterId.value=bes.bulleId;
+    else if(bes.bulleText) form.vaterText.value=bes.bulleText;
+  }
+}
+function openKalbForm(id){
+  const k=id? byId(db.kaelber,id) : {};
+  const mutterOpts=[['',t('optWaehl')],...db.kuehe.map(c=>[c.id,c.name])];
+  const vaterOpts=[['',t('optWaehl')],...db.bullen.map(b=>[b.id,b.name])];
+  openModal('<h2>'+(id?t('fKalbEdit'):t('fKalbNew'))+'</h2>'+
+    '<form onsubmit="return saveKalb(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    ff('text','name',t('lName'),k.name,'',true)+
+    ff('text','nr',t('lNr'),k.nr)+
+    fsel('mutterId',t('lMutter'),k.mutterId||'',mutterOpts,false,{onchange:'updateKalbVaterVorschlag(this.form)'})+
+    ff('text','mutterText',t('lMutterText'),k.mutterText,t('hintElternText'))+
+    fchk('mutterUnbekannt',t('lMutterUnbekannt'),k.mutterUnbekannt)+
+    fsel('vaterId',t('lVaterBulle'),k.vaterId||'',vaterOpts)+
+    ff('text','vaterText',t('lVaterText'),k.vaterText!=null?k.vaterText:k.vater,t('hintElternText'))+
+    fchk('vaterUnbekannt',t('lVaterUnbekannt'),k.vaterUnbekannt)+
+    ff('date','geb',t('lGeb'),k.geb)+
+    ff('number','gewicht',t('lGewicht'),k.gewicht)+
+    fsel('geschlecht',t('lGeschlecht'),k.geschlecht||'',[['',t('optUnbek')],['w',t('weiblich')],['m',t('maennlich')]])+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>'
+  );
+}
+function saveKalb(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), name:f.name.value.trim(), nr:f.nr.value.trim(), mutterId:f.mutterId.value||null,
+    mutterText:f.mutterText.value.trim(), mutterUnbekannt:f.mutterUnbekannt.checked,
+    vaterId:f.vaterId.value||null, vaterText:f.vaterText.value.trim(), vaterUnbekannt:f.vaterUnbekannt.checked,
+    geb:f.geb.value, gewicht:f.gewicht.value?parseFloat(f.gewicht.value):null, geschlecht:f.geschlecht.value};
+  if(id){const i=db.kaelber.findIndex(x=>x.id===id); db.kaelber[i]={...db.kaelber[i],...obj};}
+  else db.kaelber.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteKalb(id){
+  if(!confirm(t('confDelKalb')))return;
+  db.kaelber=db.kaelber.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+function promoteKalb(id){
+  const k=byId(db.kaelber,id);
+  if(!confirm(t('confPromote',{n:k.name})))return;
+  db.kuehe.push({id:uid(),name:k.name,nr:k.nr,rasse:'',geb:k.geb,lakt:0,gewicht:k.gewicht,status:'aktiv',notizen:'',
+    mutterId:k.mutterId||null, mutterText:k.mutterText||'', mutterUnbekannt:!!k.mutterUnbekannt,
+    vaterId:k.vaterId||null, vaterText:k.vaterText!=null?k.vaterText:(k.vater||''), vaterUnbekannt:!!k.vaterUnbekannt});
+  db.kaelber=db.kaelber.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== BULLEN ===== */
+function renderBullen(){
+  const tbody=document.getElementById('bullen-tbody');
+  const cards=document.getElementById('bullen-cards');
+  if(!db.bullen.length){
+    tbody.innerHTML='<tr><td colspan="5" class="muted">'+t('noBullen')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noBullen')+'</p>';
+    return;
+  }
+  tbody.innerHTML=db.bullen.map(b=>'<tr><td>'+esc(b.name)+'</td><td>'+(b.nr||'–')+'</td><td>'+esc(b.rasse||'–')+'</td><td>'+esc(b.notizen||'–')+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openBulleForm(\''+b.id+'\')">✏️</button> <button class="btn icon-btn" onclick="printBulleProfile(\''+b.id+'\')" title="'+t('print')+'">🖨</button> <button class="btn icon-btn red" onclick="deleteBulle(\''+b.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=db.bullen.map(b=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(b.name)+'</span></div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thNr')+'</div>'+(b.nr||'–')+'</div><div><div class="lbl">'+t('thRasse')+'</div>'+esc(b.rasse||'–')+'</div></div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openBulleForm(\''+b.id+'\')">'+t('edit')+'</button><button class="btn sm secondary" onclick="printBulleProfile(\''+b.id+'\')">'+t('print')+'</button><button class="btn sm danger" onclick="deleteBulle(\''+b.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function openBulleForm(id){
+  const b=id? byId(db.bullen,id) : {};
+  openModal('<h2>'+(id?t('fBulleEdit'):t('fBulleNew'))+'</h2>'+
+    '<form onsubmit="return saveBulle(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+ff('text','name',t('lName'),b.name,'',true)+ff('text','nr',t('lNr'),b.nr)+ff('text','rasse',t('lRasse'),b.rasse)+
+    ff('text','vaterInfo',t('lVaterInfo'),b.vaterInfo,t('hintBulleInfo'))+
+    ff('text','mutterInfo',t('lMutterInfo'),b.mutterInfo,t('hintBulleInfo'))+
+    fft('notizen',t('lNotizen'),b.notizen)+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveBulle(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), name:f.name.value.trim(), nr:f.nr.value.trim(), rasse:f.rasse.value.trim(),
+    vaterInfo:f.vaterInfo.value.trim(), mutterInfo:f.mutterInfo.value.trim(), notizen:f.notizen.value.trim()};
+  if(id){const i=db.bullen.findIndex(x=>x.id===id); db.bullen[i]={...db.bullen[i],...obj};}
+  else db.bullen.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteBulle(id){
+  if(!confirm(t('confDelBulle')))return;
+  db.bullen=db.bullen.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== BESAMUNG ===== */
+function renderBes(){
+  const tbody=document.getElementById('bes-tbody');
+  const cards=document.getElementById('bes-cards');
+  const statusLabel={durchgefuehrt:t('besDurch'),traechtig:t('besTrae'),nicht_erfolgreich:t('besNicht'),abgekalbt:t('besAbge')};
+  if(!db.besamungen.length){
+    tbody.innerHTML='<tr><td colspan="6" class="muted">'+t('noBes')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noBes')+'</p>';
+    return;
+  }
+  const list=[...db.besamungen].sort((a,b)=>b.datum.localeCompare(a.datum));
+  tbody.innerHTML=list.map(b=>'<tr><td>'+esc(kuhName(b.kuhId))+'</td><td>'+esc(b.bulleText||'–')+'</td><td>'+fmtD(b.datum)+'</td>'+
+    '<td><span class="chip blue">'+statusLabel[b.status]+'</span></td><td>'+fmtD(b.erwKalb)+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openBesForm(\''+b.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteBes(\''+b.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=list.map(b=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(kuhName(b.kuhId))+'</span><span class="chip blue">'+statusLabel[b.status]+'</span></div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thDatum')+'</div>'+fmtD(b.datum)+'</div><div><div class="lbl">'+t('thErwKalb')+'</div>'+fmtD(b.erwKalb)+'</div></div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openBesForm(\''+b.id+'\')">'+t('edit')+'</button><button class="btn sm danger" onclick="deleteBes(\''+b.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function updateBesInzuchtWarnung(form){
+  const el=document.getElementById('bes-inzucht-warnung');
+  if(!el) return;
+  const kuh=byId(db.kuehe,form.kuhId.value);
+  const bulleId=form.bulleId.value;
+  el.innerHTML=(kuh&&bulleId&&kuh.vaterId===bulleId)? t('warnInzucht',{n:esc(kuh.name)}) : '';
+}
+function openBesForm(id,presetKuhId,presetDatum,presetBrunstId){
+  const b=id? byId(db.besamungen,id) : {};
+  const kuhOpts=[['',t('optWaehl')],...db.kuehe.map(c=>[c.id,c.name])];
+  const bulleOpts=[['',t('optFreitext')],...db.bullen.map(c=>[c.id,c.name])];
+  const kuhIdVal=b.kuhId||presetKuhId||'';
+  const datumVal=b.datum||presetDatum||'';
+  const brunstIdVal=b.brunstId||presetBrunstId||'';
+  const kuhInit=byId(db.kuehe,kuhIdVal);
+  const inzuchtInit=(kuhInit&&b.bulleId&&kuhInit.vaterId===b.bulleId)? t('warnInzucht',{n:esc(kuhInit.name)}) : '';
+  openModal('<h2>'+(id?t('fBesEdit'):t('fBesNew'))+'</h2>'+
+    (brunstIdVal?'<p class="hint">🔗 '+t('linkedFromBrunst')+'</p>':'')+
+    '<form onsubmit="return saveBes(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<input type="hidden" name="brunstId" value="'+esc(brunstIdVal)+'">'+
+    '<div class="fg">'+
+    fsel('kuhId',t('lKuh'),kuhIdVal,kuhOpts,true,{onchange:'updateBesInzuchtWarnung(this.form)'})+
+    fsel('bulleId',t('lBulle'),b.bulleId||'',bulleOpts,false,{onchange:'updateBesInzuchtWarnung(this.form)'})+
+    ff('text','bulleText',t('lBulleText'),b.bulleText)+
+    '<div id="bes-inzucht-warnung" class="hint" style="margin-top:-10px; color:var(--danger);">'+inzuchtInit+'</div>'+
+    ff('date','datum',t('lDatum'),datumVal,'',true,{onchange:"if(!this.form.erwKalb.value&&this.value)this.form.erwKalb.value=addDaysIso(this.value,283);"})+
+    fsel('status',t('lStatus'),b.status||'durchgefuehrt',[['durchgefuehrt',t('besDurch')],['traechtig',t('besTrae')],['nicht_erfolgreich',t('besNicht')],['abgekalbt',t('besAbge')]])+
+    ff('date','erwKalb',t('lErwKalb'),b.erwKalb,t('hintKalb'))+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveBes(e,id){
+  e.preventDefault(); const f=e.target;
+  let erwKalb=f.erwKalb.value;
+  if(!erwKalb) erwKalb=addDaysIso(f.datum.value,283);
+  const bulle=byId(db.bullen,f.bulleId.value);
+  const bulleText=bulle? bulle.name : f.bulleText.value.trim();
+  const obj={id:id||uid(), kuhId:f.kuhId.value, bulleId:f.bulleId.value||null, bulleText, datum:f.datum.value, status:f.status.value, erwKalb, brunstId:f.brunstId.value||null};
+  if(id){const i=db.besamungen.findIndex(x=>x.id===id); db.besamungen[i]={...db.besamungen[i],...obj};}
+  else db.besamungen.push(obj);
+  if(obj.status==='traechtig'){const k=byId(db.kuehe,obj.kuhId); if(k) k.status='traechtig';}
+  if(obj.status==='abgekalbt'){const k=byId(db.kuehe,obj.kuhId); if(k){k.status='warte'; k.waitUntil=addDaysIso(obj.erwKalb,settings.waitDays);}}
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteBes(id){
+  if(!confirm(t('confDelBes')))return;
+  db.besamungen=db.besamungen.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== BRUNST ===== */
+function renderBrunst(){
+  const tbody=document.getElementById('brunst-tbody');
+  const cards=document.getElementById('brunst-cards');
+  const fBox=document.getElementById('brunst-forecast');
+  const forecasts=heatForecasts().sort((a,b)=>a.days-b.days);
+  fBox.innerHTML=forecasts.length? forecasts.map(f=>'<div class="alert-row"><div><div class="alert-name">'+esc(f.name)+'</div><div class="alert-sub">'+t('lastHeat',{d:fmtD(f.last)})+'</div></div>'+
+    (f.days<0? '<span class="chip red">'+t('overdueSince',{n:-f.days})+'</span>' : f.days===0? '<span class="chip gold">'+t('todayExp')+'</span>' : '<span class="chip blue">'+t('inDaysDate',{n:f.days,d:fmtD(f.next)})+'</span>')+'</div>').join('') : '<p class="muted">'+t('noForecast')+'</p>';
+
+  if(!db.brunst.length){
+    tbody.innerHTML='<tr><td colspan="5" class="muted">'+t('noBrunst')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noBrunst')+'</p>';
+    return;
+  }
+  const list=[...db.brunst].sort((a,b)=>b.datum.localeCompare(a.datum));
+  const besStatusHtml=b=>{
+    const linked=db.besamungen.find(x=>x.brunstId===b.id);
+    return linked? '<span class="chip green">✓ '+t('besLinked',{d:fmtD(linked.datum)})+'</span>'
+      : '<button class="btn sm secondary" onclick="openBesForm(null,\''+b.kuhId+'\',\''+b.datum+'\',\''+b.id+'\')">💉 '+t('addBes')+'</button>';
+  };
+  tbody.innerHTML=list.map(b=>'<tr><td>'+esc(kuhName(b.kuhId))+'</td><td>'+fmtD(b.datum)+'</td><td>'+esc(b.notizen||'–')+'</td><td>'+besStatusHtml(b)+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openBrunstForm(\''+b.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteBrunst(\''+b.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=list.map(b=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(kuhName(b.kuhId))+'</span></div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thDatum')+'</div>'+fmtD(b.datum)+'</div></div>'+
+    '<div style="margin-bottom:10px">'+besStatusHtml(b)+'</div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openBrunstForm(\''+b.id+'\')">'+t('edit')+'</button><button class="btn sm danger" onclick="deleteBrunst(\''+b.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function openBrunstForm(id){
+  const b=id? byId(db.brunst,id) : {};
+  const kuhOpts=[['',t('optWaehl')],...db.kuehe.map(c=>[c.id,c.name])];
+  openModal('<h2>'+(id?t('fBrunstEdit'):t('fBrunstNew'))+'</h2>'+
+    '<form onsubmit="return saveBrunst(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+fsel('kuhId',t('lKuh'),b.kuhId||'',kuhOpts,true)+ff('date','datum',t('lDatumBeo'),b.datum,'',true)+fft('notizen',t('lNotizen'),b.notizen)+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveBrunst(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), kuhId:f.kuhId.value, datum:f.datum.value, notizen:f.notizen.value.trim()};
+  if(id){const i=db.brunst.findIndex(x=>x.id===id); db.brunst[i]={...db.brunst[i],...obj};}
+  else db.brunst.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteBrunst(id){
+  if(!confirm(t('confDelBrunst')))return;
+  db.brunst=db.brunst.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== GESUNDHEIT ===== */
+function renderHealth(){
+  const tbody=document.getElementById('health-tbody');
+  const cards=document.getElementById('health-cards');
+  if(!db.health.length){
+    tbody.innerHTML='<tr><td colspan="7" class="muted">'+t('noHealthRec')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noHealthRec')+'</p>';
+    return;
+  }
+  const list=[...db.health].sort((a,b)=>b.datum.localeCompare(a.datum));
+  tbody.innerHTML=list.map(h=>'<tr><td>'+esc(h.tierName||tierLabel(h.tierId))+'</td><td>'+healthDateRange(h)+'</td><td>'+esc(h.diagnose||'–')+'</td>'+
+    '<td>'+esc(h.medikament||'–')+'</td><td>'+esc(h.tierarzt||'–')+'</td><td>'+fmtD(h.naechster)+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openHealthForm(\''+h.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteHealth(\''+h.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=list.map(h=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(h.tierName||tierLabel(h.tierId))+'</span></div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thDatum')+'</div>'+healthDateRange(h)+'</div><div><div class="lbl">'+t('thDiagnose')+'</div>'+esc(h.diagnose||'–')+'</div></div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openHealthForm(\''+h.id+'\')">'+t('edit')+'</button><button class="btn sm danger" onclick="deleteHealth(\''+h.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function healthDateRange(h){
+  if(!h.datumBis) return fmtD(h.datum);
+  const range=fmtD(h.datum)+' – '+fmtD(h.datumBis);
+  const today=todayStr();
+  if(today>=h.datum && today<=h.datumBis){
+    const totalDays=daysDiff(h.datum,h.datumBis)+1;
+    const curDay=daysDiff(h.datum,today)+1;
+    return range+' <span class="chip gold">'+t('healthDayOf',{n:curDay,m:totalDays})+'</span>';
+  }
+  return range;
+}
+function openHealthForm(id){
+  const h=id? byId(db.health,id) : {};
+  const tierOpts=[['',t('optFreitext')],...db.kuehe.map(c=>[c.id,c.name]),...db.kaelber.map(c=>[c.id,c.name]),...db.bullen.map(c=>[c.id,c.name])];
+  openModal('<h2>'+(id?t('fHealthEdit'):t('fHealthNew'))+'</h2>'+
+    '<form onsubmit="return saveHealth(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    fsel('tierId',t('lTier'),h.tierId||'',tierOpts)+
+    ff('text','tierName',t('lTierName'),h.tierName)+
+    ff('date','datum',t('lDatum'),h.datum,'',true)+
+    ff('date','datumBis',t('lDatumBis'),h.datumBis,t('hintDatumBis'),false)+
+    ff('text','diagnose',t('lDiagnose'),h.diagnose)+
+    ff('text','medikament',t('lMedikament'),h.medikament)+
+    ff('text','tierarzt',t('lTierarzt'),h.tierarzt)+
+    ff('date','naechster',t('lNaechster'),h.naechster)+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveHealth(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), tierId:f.tierId.value||null, tierName:f.tierName.value.trim(), datum:f.datum.value, datumBis:f.datumBis.value||null,
+    diagnose:f.diagnose.value.trim(), medikament:f.medikament.value.trim(), tierarzt:f.tierarzt.value.trim(), naechster:f.naechster.value};
+  if(id){const i=db.health.findIndex(x=>x.id===id); db.health[i]={...db.health[i],...obj};}
+  else db.health.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteHealth(id){
+  if(!confirm(t('confDelHealth')))return;
+  db.health=db.health.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== MILCH ===== */
+function milchStatsForKuh(kuhId){
+  const rateList=milchRatesForKuh(kuhId);
+  const entries=[];
+  if(rateList.length){
+    const kuh=byId(db.kuehe,kuhId);
+    const laktNr=kuh&&kuh.lakt? kuh.lakt : 1;
+    let d=rateList[0].von; const today0=todayStr();
+    while(d<=today0){
+      const amt=milchRateAmountForDate(kuhId,d);
+      if(amt>0) entries.push({kuhId, datum:d, milchKg:amt, laktNr});
+      d=addDaysIso(d,1);
+    }
+  }
+  const today=todayStr(); const month=monthStr(today);
+  const todayE=entries.filter(e=>e.datum===today);
+  const monthE=entries.filter(e=>monthStr(e.datum)===month);
+  const curLakt=entries.length? entries[entries.length-1].laktNr : null;
+  const laktE=curLakt!=null? entries.filter(e=>e.laktNr===curLakt) : [];
+  const prevLaktNr=curLakt!=null? curLakt-1 : null;
+  const prevLaktE=prevLaktNr!=null? entries.filter(e=>e.laktNr===prevLaktNr) : [];
+  const sum=arr=>arr.reduce((s,e)=>s+(+e.milchKg||0),0);
+  const avg=arr=>arr.length? sum(arr)/arr.length : 0;
+  const curAvg=avg(laktE), prevAvg=avg(prevLaktE);
+  let trend='flat', trendPct=0;
+  if(prevLaktE.length && curLakt!=null){
+    trendPct=prevAvg? Math.round(((curAvg-prevAvg)/prevAvg)*100) : 0;
+    trend=trendPct>2?'up':trendPct<-2?'down':'flat';
+  }
+  return{
+    entries, todayKg:sum(todayE), monthSum:sum(monthE), monthAvg:avg(monthE),
+    laktSum:sum(laktE), laktAvg:curAvg, laktNr:curLakt, trend, trendPct, hasPrev:!!prevLaktE.length
+  };
+}
+function sparklineSvg(entries){
+  const last=entries.slice(-30);
+  if(last.length<2) return '';
+  const vals=last.map(e=>+e.milchKg||0);
+  const max=Math.max(...vals,1), min=Math.min(...vals,0);
+  const w=200,h=32,pad=2;
+  const pts=vals.map((v,i)=>{
+    const x=pad+(i/(vals.length-1))*(w-2*pad);
+    const y=h-pad-((v-min)/((max-min)||1))*(h-2*pad);
+    return x.toFixed(1)+','+y.toFixed(1);
+  }).join(' ');
+  return '<svg class="sparkline" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><polyline points="'+pts+'" fill="none" stroke="var(--primary)" stroke-width="2"/></svg>';
+}
+function renderMilch(){
+  renderMilchrate();
+  const summary=document.getElementById('milk-summary');
+  const cowsWithMilk=db.kuehe.filter(k=>milchRatesForKuh(k.id).length>0);
+  summary.innerHTML=cowsWithMilk.length? cowsWithMilk.map(k=>{
+    const s=milchStatsForKuh(k.id);
+    const trendHtml=s.hasPrev? '<span class="trend '+s.trend+'">'+(s.trend==='up'?'↑':s.trend==='down'?'↓':'–')+' '+(s.trendPct>0?'+':'')+s.trendPct+'% '+t('trendVs',{n:s.laktNr-1})+'</span>' : '<span class="trend flat">'+t('keineVorlaktation')+'</span>';
+    return '<div class="cow-sum-card"><div class="cow-sum-head"><span class="cow-sum-name">'+esc(k.name)+'</span>'+(s.laktNr?'<span class="chip blue">#'+s.laktNr+'</span>':'')+'</div>'+
+      '<div class="cow-sum-rows">'+
+      '<div><span class="lbl">'+t('heute')+'</span><span>'+(s.todayKg?s.todayKg.toFixed(1)+' kg':'–')+'</span></div>'+
+      '<div><span class="lbl">'+t('diesenMonat')+'</span><span>'+s.monthSum.toFixed(1)+' kg · Ø '+s.monthAvg.toFixed(1)+' kg</span></div>'+
+      '<div><span class="lbl">'+t('aktuelleLakt')+'</span><span>'+s.laktSum.toFixed(1)+' kg · Ø '+s.laktAvg.toFixed(1)+' kg</span></div>'+
+      '</div>'+trendHtml+sparklineSvg(s.entries)+'</div>';
+  }).join('') : '<p class="muted">'+t('noMilkEntries')+'</p>';
+}
+
+/* ===== ERGÄNZUNG (Mineralien & Getreide, zyklisch) ===== */
+function ergaenzungTypLabel(typ){
+  return typ==='mineral'? t('ergTypMineral') : typ==='getreide'? t('ergTypGetreide') : (typ||t('ergTypSonstiges'));
+}
+function ergaenzungStatus(e){
+  const days=daysDiff(e.startDatum,todayStr());
+  const dauer=parseInt(e.dauerTage)||0, pause=parseInt(e.pauseTage)||0;
+  const cycleLen=dauer+pause;
+  if(days<0) return {phase:'geplant', tage:-days};
+  if(cycleLen<=0) return {phase:'aktiv', tage:0};
+  const pos=days % cycleLen;
+  if(pos<dauer) return {phase:'aktiv', tage:dauer-pos};
+  return {phase:'pause', tage:cycleLen-pos};
+}
+function renderErgaenzung(){
+  const tbody=document.getElementById('ergaenzung-tbody');
+  const cards=document.getElementById('ergaenzung-cards');
+  if(!db.ergaenzung.length){
+    tbody.innerHTML='<tr><td colspan="8" class="muted">'+t('noErgaenzung')+'</td></tr>';
+    cards.innerHTML='<p class="muted">'+t('noErgaenzung')+'</p>';
+    return;
+  }
+  const list=[...db.ergaenzung].sort((a,b)=>b.startDatum.localeCompare(a.startDatum));
+  const statusChip=e=>{
+    const s=ergaenzungStatus(e);
+    if(s.phase==='geplant') return '<span class="chip gray">'+t('ergStartsIn',{n:s.tage})+'</span>';
+    if(s.phase==='aktiv') return '<span class="chip green">'+t('ergActive',{n:s.tage})+'</span>';
+    return '<span class="chip gold">'+t('ergPaused',{n:s.tage})+'</span>';
+  };
+  tbody.innerHTML=list.map(e=>'<tr><td>'+esc(e.tierName||tierLabel(e.tierId))+'</td><td>'+ergaenzungTypLabel(e.typ)+'</td><td>'+esc(e.name||'–')+'</td>'+
+    '<td>'+e.menge+' '+esc(e.einheit)+'</td><td>'+fmtD(e.startDatum)+'</td><td>'+e.dauerTage+' / '+e.pauseTage+'</td><td>'+statusChip(e)+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openErgaenzungForm(\''+e.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteErgaenzung(\''+e.id+'\')">🗑</button></td></tr>').join('');
+  cards.innerHTML=list.map(e=>'<div class="animal-card"><div class="animal-card-header"><span class="animal-card-name">'+esc(e.tierName||tierLabel(e.tierId))+' · '+ergaenzungTypLabel(e.typ)+'</span>'+statusChip(e)+'</div>'+
+    '<div class="animal-card-body"><div><div class="lbl">'+t('thErgName')+'</div>'+esc(e.name||'–')+'</div><div><div class="lbl">'+t('thErgMenge')+'</div>'+e.menge+' '+esc(e.einheit)+'</div>'+
+    '<div><div class="lbl">'+t('thErgStart')+'</div>'+fmtD(e.startDatum)+'</div><div><div class="lbl">'+t('thErgDauerPause')+'</div>'+e.dauerTage+' / '+e.pauseTage+'</div></div>'+
+    '<div class="animal-card-actions"><button class="btn sm secondary" onclick="openErgaenzungForm(\''+e.id+'\')">'+t('edit')+'</button><button class="btn sm danger" onclick="deleteErgaenzung(\''+e.id+'\')">'+t('del')+'</button></div></div>').join('');
+}
+function applyErgPreset(kind,form){
+  if(!kind) return;
+  const tierId=form.tierId.value;
+  const presets={
+    lakt_kalk:{typ:'mineral',name:'Kalkwasser',menge:250,einheit:'ml'},
+    lakt_kleie:{typ:'getreide',name:'Weizenkleie',menge:1,einheit:'kg'},
+    kalb_kalk:{typ:'mineral',name:'Kalkwasser',menge:100,einheit:'ml'},
+    kalb_kleie:{typ:'getreide',name:'Weizenkleie',menge:0.3,einheit:'kg'},
+    traechtig_kalk:{typ:'mineral',name:'Kalkwasser',menge:250,einheit:'ml'},
+    traechtig_kleie:{typ:'getreide',name:'Weizenkleie',menge:1,einheit:'kg'}
+  };
+  const p=presets[kind]; if(!p) return;
+  let dauer=365, pause=0;
+  if(kind.startsWith('traechtig')){
+    const bes=db.besamungen.filter(b=>b.kuhId===tierId && b.status==='traechtig' && b.erwKalb).sort((a,b)=>b.datum.localeCompare(a.datum))[0];
+    const start=form.startDatum.value||todayStr();
+    if(bes){
+      const sixWkBefore=addDaysIso(bes.erwKalb,-42);
+      dauer=Math.max(1,daysDiff(start,sixWkBefore));
+      pause=42;
+    }else{ dauer=280; pause=42; }
+  }
+  form.typ.value=p.typ; form.name.value=p.name; form.menge.value=p.menge; form.einheit.value=p.einheit;
+  form.dauerTage.value=dauer; form.pauseTage.value=pause;
+}
+function openErgaenzungForm(id){
+  const e=id? byId(db.ergaenzung,id) : {};
+  const tierOpts=[['',t('optFreitext')],...db.kuehe.map(c=>[c.id,c.name]),...db.kaelber.map(c=>[c.id,c.name])];
+  openModal('<h2>'+(id?t('fErgEdit'):t('fErgNew'))+'</h2>'+
+    '<form onsubmit="return saveErgaenzung(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    fsel('tierId',t('lTier'),e.tierId||'',tierOpts)+
+    ff('text','tierName',t('lTierName'),e.tierName)+
+    '<div class="ff full"><label>'+t('lErgPreset')+'</label><select onchange="applyErgPreset(this.value,this.form)">'+
+      '<option value="">'+t('optWaehl')+'</option>'+
+      '<option value="lakt_kalk">'+t('presetLaktKalk')+'</option>'+
+      '<option value="lakt_kleie">'+t('presetLaktKleie')+'</option>'+
+      '<option value="traechtig_kalk">'+t('presetTraechtigKalk')+'</option>'+
+      '<option value="traechtig_kleie">'+t('presetTraechtigKleie')+'</option>'+
+      '<option value="kalb_kalk">'+t('presetKalbKalk')+'</option>'+
+      '<option value="kalb_kleie">'+t('presetKalbKleie')+'</option>'+
+    '</select></div>'+
+    fsel('typ',t('lErgTyp'),e.typ||'mineral',[['mineral',t('ergTypMineral')],['getreide',t('ergTypGetreide')],['sonstiges',t('ergTypSonstiges')]],true)+
+    ff('text','name',t('lErgName'),e.name,'',false)+
+    ff('number','menge',t('lErgMenge'),e.menge,'',true,{step:'0.1',min:'0'})+
+    fsel('einheit',t('lErgEinheit'),e.einheit||'g',[['g','g'],['ml','ml'],['kg','kg']],true)+
+    ff('date','startDatum',t('lErgStart'),e.startDatum||todayStr(),'',true)+
+    ff('number','dauerTage',t('lErgDauer'),e.dauerTage,'',true,{min:'1'})+
+    ff('number','pauseTage',t('lErgPause'),e.pauseTage,t('hintErgPause'),true,{min:'0'})+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveErgaenzung(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), tierId:f.tierId.value||null, tierName:f.tierName.value.trim(), typ:f.typ.value, name:f.name.value.trim(),
+    menge:parseFloat(f.menge.value)||0, einheit:f.einheit.value, startDatum:f.startDatum.value,
+    dauerTage:parseInt(f.dauerTage.value)||1, pauseTage:parseInt(f.pauseTage.value)||0};
+  if(id){const i=db.ergaenzung.findIndex(x=>x.id===id); db.ergaenzung[i]={...db.ergaenzung[i],...obj};}
+  else db.ergaenzung.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteErgaenzung(id){
+  if(!confirm(t('confDelErgaenzung')))return;
+  db.ergaenzung=db.ergaenzung.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== EINKÄUFE ===== */
+function renderEinkauf(){
+  renderFutterpreis();
+  const summary=document.getElementById('einkauf-summary');
+  const total=db.einkauf.reduce((s,x)=>s+(+x.preis||0),0);
+  const byArtikel={};
+  db.einkauf.forEach(x=>{byArtikel[x.artikel]=(byArtikel[x.artikel]||0)+(+x.preis||0);});
+  const cardsData=[['green','💰',fmtMoney(total),t('einkaufTotal')]].concat(
+    Object.entries(byArtikel).map(([art,sum])=>['','📦',fmtMoney(sum),art])
+  );
+  summary.innerHTML=cardsData.map(([cls,icon,num,label])=>'<div class="stat-card '+cls+'"><div class="stat-num" style="font-size:1.3rem">'+num+'</div><div class="stat-label">'+esc(label)+'</div><div class="stat-icon">'+icon+'</div></div>').join('');
+
+  const tbody=document.getElementById('einkauf-tbody');
+  if(!db.einkauf.length){
+    tbody.innerHTML='<tr><td colspan="7" class="muted">'+t('noEinkauf')+'</td></tr>';
+    return;
+  }
+  const list=[...db.einkauf].sort((a,b)=>b.datum.localeCompare(a.datum));
+  tbody.innerHTML=list.map(x=>{
+    const pe=x.menge? fmtMoney(x.preis/x.menge) : '–';
+    return '<tr><td>'+fmtD(x.datum)+'</td><td>'+esc(x.artikel)+'</td><td>'+x.menge+'</td><td>'+esc(x.einheit)+'</td><td>'+fmtMoney(x.preis)+'</td><td>'+pe+'</td>'+
+      '<td><button class="btn icon-btn" onclick="openEinkaufForm(\''+x.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteEinkauf(\''+x.id+'\')">🗑</button></td></tr>';
+  }).join('');
+}
+function openEinkaufForm(id){
+  const x=id? byId(db.einkauf,id) : {};
+  const artikelKnown=[...new Set(db.einkauf.map(y=>y.artikel).filter(Boolean))];
+  openModal('<h2>'+(id?t('fEinkaufEdit'):t('fEinkaufNew'))+'</h2>'+
+    '<form onsubmit="return saveEinkauf(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    ff('date','datum',t('lDatum'),x.datum||todayStr(),'',true)+
+    ff('text','artikel',t('lArtikel'),x.artikel,'',true,{list:'artikel-list',oninput:'updateEinkaufPreisVorschlag(this.form)'})+
+    ff('number','menge',t('lMenge'),x.menge,'',true,{step:'0.1',min:'0',oninput:'updateEinkaufPreisVorschlag(this.form)'})+
+    ff('text','einheit',t('lEinheit'),x.einheit,'',true)+
+    ff('number','preis',t('lPreis'),x.preis,t('hintPreis'),true,{step:'0.01',min:'0',oninput:'this.dataset.manual=1'})+
+    '<datalist id="artikel-list">'+artikelKnown.map(v=>'<option value="'+esc(v)+'">').join('')+'</datalist>'+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function updateEinkaufPreisVorschlag(form){
+  const artikel=form.artikel.value.trim();
+  const menge=parseFloat(form.menge.value)||0;
+  const cur=currentFutterpreis(artikel);
+  if(cur && menge>0 && !form.preis.dataset.manual){
+    form.preis.value=(cur.preis*menge).toFixed(2);
+    if(!form.einheit.value) form.einheit.value=cur.einheit;
+  }
+}
+function saveEinkauf(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), datum:f.datum.value, artikel:f.artikel.value.trim(), menge:parseFloat(f.menge.value)||0, einheit:f.einheit.value.trim(), preis:parseFloat(f.preis.value)||0};
+  if(id){const i=db.einkauf.findIndex(x=>x.id===id); db.einkauf[i]={...db.einkauf[i],...obj};}
+  else db.einkauf.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteEinkauf(id){
+  if(!confirm(t('confDelEinkauf')))return;
+  db.einkauf=db.einkauf.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== FUTTERPREISE (Preisliste je Artikel, für steigende Preise) ===== */
+function futterpreisForArtikel(art){
+  return db.futterpreis.filter(f=>f.artikel===art).sort((a,b)=>a.von.localeCompare(b.von));
+}
+function currentFutterpreis(art){
+  const list=futterpreisForArtikel(art);
+  return list.length? list[list.length-1] : null;
+}
+function alleFutterpreisArtikel(){
+  return [...new Set(db.futterpreis.map(f=>f.artikel))];
+}
+function renderFutterpreis(){
+  const tbody=document.getElementById('futterpreis-tbody');
+  if(!tbody) return;
+  const arts=alleFutterpreisArtikel();
+  if(!arts.length){
+    tbody.innerHTML='<tr><td colspan="4" class="muted">'+t('noFutterpreis')+'</td></tr>';
+    return;
+  }
+  tbody.innerHTML=arts.map(art=>{
+    const cur=currentFutterpreis(art);
+    if(!cur) return '';
+    return '<tr><td>'+esc(art)+'</td><td>'+fmtMoney(cur.preis)+' / '+esc(cur.einheit)+'</td><td>'+fmtD(cur.von)+'</td>'+
+      '<td><button class="btn icon-btn" onclick="openFutterpreisForm(\''+esc(art)+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteFutterpreis(\''+esc(art)+'\')">🗑</button></td></tr>';
+  }).join('');
+}
+function openFutterpreisForm(art){
+  const cur=art? currentFutterpreis(art) : null;
+  const artikelKnown=[...new Set(db.einkauf.map(y=>y.artikel).filter(Boolean))];
+  openModal('<h2>'+(cur?t('fFutterpreisEdit'):t('fFutterpreisNew'))+'</h2>'+
+    '<form onsubmit="return saveFutterpreis(event)">'+
+    '<div class="fg">'+
+    ff('text','artikel',t('lArtikel'),art||'',t('hintFutterpreisArtikel'),true,{list:'artikel-list-fp'})+
+    ff('text','einheit',t('lEinheit'),cur?cur.einheit:'','',true)+
+    ff('number','preis',t('lPreisProEinheit'),cur?cur.preis:'',t('hintFutterpreisBetrag'),true,{step:'0.01',min:'0'})+
+    ff('date','von',t('lSeitDatum'),cur?cur.von:todayStr(),t('hintFutterpreisVon'),true)+
+    '<datalist id="artikel-list-fp">'+artikelKnown.map(v=>'<option value="'+esc(v)+'">').join('')+'</datalist>'+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveFutterpreis(e){
+  e.preventDefault(); const f=e.target;
+  db.futterpreis.push({id:uid(), artikel:f.artikel.value.trim(), einheit:f.einheit.value.trim(), preis:parseFloat(f.preis.value)||0, von:f.von.value});
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteFutterpreis(art){
+  if(!confirm(t('confDelFutterpreis')))return;
+  db.futterpreis=db.futterpreis.filter(f=>f.artikel!==art);
+  saveDB(); renderAll();
+}
+
+/* ===== MILCHRATE (konstante Milchmenge pro Kuh, Zeitraum von–bis) ===== */
+function milchRatesForKuh(kuhId){
+  return db.milchrate.filter(r=>r.kuhId===kuhId).sort((a,b)=>a.von.localeCompare(b.von));
+}
+function milchRateAt(kuhId,datum){
+  const active=db.milchrate.filter(r=>r.kuhId===kuhId && r.von<=datum && (!r.bis||r.bis>=datum));
+  return active.length? active.reduce((a,b)=>a.von>b.von?a:b) : null;
+}
+function milchRateAmountForDate(kuhId,datum){
+  const r=milchRateAt(kuhId,datum);
+  return r? (+r.kgProTag||0) : 0;
+}
+function currentMilchRate(kuhId){
+  return milchRateAt(kuhId,todayStr());
+}
+function renderMilchrate(){
+  const tbody=document.getElementById('milchrate-tbody');
+  if(!tbody) return;
+  const list=[...db.milchrate].sort((a,b)=>tierLabel(a.kuhId).localeCompare(tierLabel(b.kuhId))||b.von.localeCompare(a.von));
+  if(!list.length){
+    tbody.innerHTML='<tr><td colspan="5" class="muted">'+t('noMilchrate')+'</td></tr>';
+    return;
+  }
+  tbody.innerHTML=list.map(r=>
+    '<tr><td>'+esc(tierLabel(r.kuhId))+'</td><td>'+(+r.kgProTag).toFixed(1)+'</td><td>'+fmtD(r.von)+'</td><td>'+(r.bis?fmtD(r.bis):t('milchrateOngoing'))+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openMilchrateForm(\''+r.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteMilchrate(\''+r.id+'\')">🗑</button></td></tr>'
+  ).join('');
+}
+function openMilchrateForm(id){
+  const cur=id? byId(db.milchrate,id) : null;
+  const kuhOpts=[['',t('optWaehl')],...db.kuehe.map(c=>[c.id,c.name])];
+  openModal('<h2>'+(cur?t('fMilchrateEdit'):t('fMilchrateNew'))+'</h2>'+
+    '<form onsubmit="return saveMilchrate(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    fsel('kuhId',t('lKuh'),cur?cur.kuhId:'',kuhOpts,true)+
+    ff('date','von',t('lSeitDatum'),cur?cur.von:todayStr(),t('hintMilchrateVon'),true)+
+    ff('date','bis',t('lBisDatum'),cur&&cur.bis?cur.bis:'',t('hintMilchrateBis'),false)+
+    ff('number','kgProTag',t('lKgProTag'),cur?cur.kgProTag:'',t('hintMilchrateKg'),true,{step:'0.1',min:'0'})+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveMilchrate(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={kuhId:f.kuhId.value, von:f.von.value, bis:f.bis.value||null, kgProTag:parseFloat(f.kgProTag.value)||0};
+  if(id){const i=db.milchrate.findIndex(x=>x.id===id); db.milchrate[i]={...db.milchrate[i],...obj};}
+  else db.milchrate.push({id:uid(), ...obj});
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteMilchrate(id){
+  if(!confirm(t('confDelMilchrate')))return;
+  db.milchrate=db.milchrate.filter(r=>r.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== MILCHVERKAUF (automatisch aus konstanter Milchmenge) ===== */
+function milchRevenueDates(){
+  const set=new Set(db.milch.map(m=>m.datum));
+  const today=todayStr();
+  db.milchrate.forEach(r=>{
+    const end=(r.bis&&r.bis<today)? r.bis : today;
+    let d=r.von;
+    while(d<=end){ set.add(d); d=addDaysIso(d,1); }
+  });
+  return [...set].sort((a,b)=>b.localeCompare(a));
+}
+function milchKgForDate(datum){
+  const explicitByKuh={};
+  db.milch.filter(m=>m.datum===datum).forEach(m=>{ explicitByKuh[m.kuhId]=(explicitByKuh[m.kuhId]||0)+(+m.milchKg||0); });
+  let total=0;
+  const kuehIds=new Set([...Object.keys(explicitByKuh), ...db.milchrate.map(r=>r.kuhId)]);
+  kuehIds.forEach(kuhId=>{
+    total+= explicitByKuh[kuhId]!==undefined ? explicitByKuh[kuhId] : milchRateAmountForDate(kuhId,datum);
+  });
+  return total;
+}
+function milchVerkaufBetrag(datum){
+  const override=db.milchverkauf.find(x=>x.datum===datum);
+  if(override) return +override.betrag||0;
+  return milchKgForDate(datum)*(+settings.milchpreis||0);
+}
+function renderMilchverkauf(){
+  const tbody=document.getElementById('milchverkauf-tbody');
+  const dates=milchRevenueDates();
+  if(!dates.length){
+    tbody.innerHTML='<tr><td colspan="5" class="muted">'+t('noMilchverkauf')+'</td></tr>';
+    return;
+  }
+  tbody.innerHTML=dates.map(d=>{
+    const kg=milchKgForDate(d);
+    const auto=kg*(+settings.milchpreis||0);
+    const override=db.milchverkauf.find(x=>x.datum===d);
+    const actual=override? (+override.betrag||0) : auto;
+    return '<tr><td>'+fmtD(d)+'</td><td>'+kg.toFixed(1)+'</td><td>'+fmtMoney(auto)+'</td><td>'+fmtMoney(actual)+(override?' ✏️':'')+'</td>'+
+      '<td><button class="btn icon-btn" onclick="openMilchVerkaufForm(\''+d+'\')">✏️</button></td></tr>';
+  }).join('');
+}
+function openMilchVerkaufForm(datum){
+  const kg=milchKgForDate(datum);
+  const auto=kg*(+settings.milchpreis||0);
+  const override=db.milchverkauf.find(x=>x.datum===datum);
+  const val=override? override.betrag : auto;
+  openModal('<h2>'+t('fMilchverkaufEdit')+'</h2>'+
+    '<form onsubmit="return saveMilchVerkauf(event,\''+datum+'\')">'+
+    '<div class="fg">'+
+    '<div class="ff"><label>'+t('lDatum')+'</label><input type="text" value="'+fmtD(datum)+'" disabled></div>'+
+    '<div class="ff"><label>'+t('lMilchmenge')+'</label><input type="text" value="'+kg.toFixed(1)+' kg" disabled></div>'+
+    ff('number','betrag',t('lTatsaechlicherBetrag'),val,t('hintMilchBetrag'),true,{step:'0.01',min:'0'})+
+    '</div><div class="fa">'+
+    (override? '<button type="button" class="btn secondary" onclick="resetMilchVerkauf(\''+datum+'\')">'+t('btnAutoBerechnen')+'</button>' : '')+
+    '<button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button>'+
+    '<button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveMilchVerkauf(e,datum){
+  e.preventDefault(); const f=e.target;
+  const betrag=parseFloat(f.betrag.value)||0;
+  const i=db.milchverkauf.findIndex(x=>x.datum===datum);
+  if(i>=0) db.milchverkauf[i].betrag=betrag;
+  else db.milchverkauf.push({datum,betrag});
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function resetMilchVerkauf(datum){
+  db.milchverkauf=db.milchverkauf.filter(x=>x.datum!==datum);
+  saveDB(); renderAll(); closeModal();
+}
+
+/* ===== FINANZEN ===== */
+function finanzKatLabel(k){
+  const map={
+    mitarbeiter:t('katMitarbeiter'), reparatur:t('katReparatur'), tierarzt:t('katTierarzt'), sonstige_ausgabe:t('katSonstigeAusgabe'),
+    milchverkauf:t('katMilchverkauf'), tierverkauf:t('katTierverkauf'), sonstige_einnahme:t('katSonstigeEinnahme'),
+    einkauf:t('katEinkauf')
+  };
+  return map[k]||k;
+}
+function svgBarChart(data){
+  if(!data.length) return '<p class="muted">'+t('pNone')+'</p>';
+  const width=380, barH=22, gap=10, leftPad=100, rightPad=70, topPad=4;
+  const max=Math.max(...data.map(d=>d.value),0.01);
+  const maxW=width-leftPad-rightPad;
+  const height=data.length*(barH+gap)-gap+topPad*2;
+  const rows=data.map((d,i)=>{
+    const y=topPad+i*(barH+gap);
+    const w=Math.max(3,(d.value/max)*maxW);
+    return '<text x="'+(leftPad-8)+'" y="'+(y+barH/2+4)+'" font-size="11" fill="var(--ink)" text-anchor="end">'+esc(d.label)+'</text>'+
+      '<rect x="'+leftPad+'" y="'+y+'" width="'+maxW+'" height="'+barH+'" rx="4" fill="var(--bg)"/>'+
+      '<rect x="'+leftPad+'" y="'+y+'" width="'+w+'" height="'+barH+'" rx="4" fill="'+d.color+'"/>'+
+      '<text x="'+(leftPad+w+8)+'" y="'+(y+barH/2+4)+'" font-size="11" fill="var(--ink)">'+fmtMoney(d.value)+'</text>';
+  }).join('');
+  return '<svg viewBox="0 0 '+width+' '+height+'" style="width:100%; max-width:'+width+'px; height:auto; display:block;">'+rows+'</svg>';
+}
+/* ===== FIXKOSTEN (wiederkehrende monatliche Ausgaben) ===== */
+function fixkostenForKategorie(kat){
+  return db.fixkosten.filter(f=>f.kategorie===kat).sort((a,b)=>a.von.localeCompare(b.von));
+}
+function currentFixkosten(kat){
+  const list=fixkostenForKategorie(kat);
+  return list.length? list[list.length-1] : null;
+}
+function fixkostenBetragForMonat(kat,ym){
+  const list=fixkostenForKategorie(kat).filter(f=>f.von<=ym);
+  return list.length? (+list[list.length-1].betrag||0) : 0;
+}
+function alleFixkostenKategorien(){
+  return [...new Set(db.fixkosten.map(f=>f.kategorie))];
+}
+function fixkostenMonateFuerKategorie(kat){
+  const list=fixkostenForKategorie(kat);
+  if(!list.length) return [];
+  let [y,m]=list[0].von.split('-').map(Number);
+  const curMonat=todayStr().slice(0,7);
+  const out=[];
+  let ym=y+'-'+String(m).padStart(2,'0');
+  while(ym<=curMonat){ out.push(ym); m++; if(m>12){m=1;y++;} ym=y+'-'+String(m).padStart(2,'0'); }
+  return out;
+}
+function fixkostenTotalForKategorie(kat){
+  return fixkostenMonateFuerKategorie(kat).reduce((s,ym)=>s+fixkostenBetragForMonat(kat,ym),0);
+}
+function renderFixkosten(){
+  const tbody=document.getElementById('fixkosten-tbody');
+  if(!tbody) return;
+  const kats=alleFixkostenKategorien();
+  if(!kats.length){
+    tbody.innerHTML='<tr><td colspan="4" class="muted">'+t('noFixkosten')+'</td></tr>';
+    return;
+  }
+  tbody.innerHTML=kats.map(kat=>{
+    const cur=currentFixkosten(kat);
+    if(!cur) return '';
+    return '<tr><td>'+finanzKatLabel(kat)+'</td><td>'+fmtMoney(cur.betrag)+'</td><td>'+esc(cur.von)+'</td>'+
+      '<td><button class="btn icon-btn" onclick="openFixkostenForm(\''+kat+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteFixkosten(\''+kat+'\')">🗑</button></td></tr>';
+  }).join('');
+}
+function openFixkostenForm(kat){
+  const cur=kat? currentFixkosten(kat) : null;
+  const ausgabeOpts=[['mitarbeiter',t('katMitarbeiter')],['reparatur',t('katReparatur')],['tierarzt',t('katTierarzt')],['sonstige_ausgabe',t('katSonstigeAusgabe')]];
+  const heuteMonat=todayStr().slice(0,7);
+  openModal('<h2>'+(cur?t('fFixkostenEdit'):t('fFixkostenNew'))+'</h2>'+
+    '<form onsubmit="return saveFixkosten(event)">'+
+    '<div class="fg">'+
+    fsel('kategorie',t('lKategorie'),kat||'',ausgabeOpts,true)+
+    ff('month','von',t('lSeitMonat'),cur?cur.von:heuteMonat,t('hintFixkostenVon'),true)+
+    ff('number','betrag',t('lBetragProMonat'),cur?cur.betrag:'',t('hintFixkostenBetrag'),true,{step:'0.01',min:'0'})+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveFixkosten(e){
+  e.preventDefault(); const f=e.target;
+  db.fixkosten.push({id:uid(), kategorie:f.kategorie.value, von:f.von.value, betrag:parseFloat(f.betrag.value)||0});
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteFixkosten(kat){
+  if(!confirm(t('confDelFixkosten')))return;
+  db.fixkosten=db.fixkosten.filter(f=>f.kategorie!==kat);
+  saveDB(); renderAll();
+}
+
+function allFinanzTransaktionen(){
+  const list=[];
+  db.finanzen.forEach(f=>list.push({datum:f.datum, typ:f.typ, betrag:+f.betrag||0}));
+  db.einkauf.forEach(x=>list.push({datum:x.datum, typ:'ausgabe', betrag:+x.preis||0}));
+  milchRevenueDates().forEach(d=>{
+    const b=milchVerkaufBetrag(d);
+    if(b>0) list.push({datum:d, typ:'einnahme', betrag:b});
+  });
+  alleFixkostenKategorien().forEach(kat=>{
+    fixkostenMonateFuerKategorie(kat).forEach(ym=>{
+      const b=fixkostenBetragForMonat(kat,ym);
+      if(b>0) list.push({datum:ym+'-01', typ:'ausgabe', betrag:b});
+    });
+  });
+  return list;
+}
+function monatsUebersicht(){
+  const byMonat={};
+  allFinanzTransaktionen().forEach(x=>{
+    if(!x.datum) return;
+    const m=x.datum.slice(0,7);
+    if(!byMonat[m]) byMonat[m]={einnahme:0,ausgabe:0};
+    byMonat[m][x.typ==='einnahme'?'einnahme':'ausgabe']+=x.betrag;
+  });
+  return Object.entries(byMonat).map(([monat,v])=>({monat,einnahme:v.einnahme,ausgabe:v.ausgabe,gewinn:v.einnahme-v.ausgabe})).sort((a,b)=>b.monat.localeCompare(a.monat));
+}
+function fmtMonat(ym){
+  const [y,m]=ym.split('-');
+  const d=new Date(Date.UTC(+y,+m-1,1));
+  const loc=lang==='de'?'de-DE':lang==='am'?'am-ET':'en-US';
+  try{ return d.toLocaleDateString(loc,{year:'numeric',month:'long',timeZone:'UTC'}); }
+  catch(e){ return d.toLocaleDateString('en-US',{year:'numeric',month:'long',timeZone:'UTC'}); }
+}
+function renderFinanzen(){
+  renderMilchverkauf();
+  renderFixkosten();
+  const manualExpenses=db.finanzen.filter(f=>f.typ==='ausgabe');
+  const manualIncome=db.finanzen.filter(f=>f.typ==='einnahme');
+  const einkaufTotal=db.einkauf.reduce((s,x)=>s+(+x.preis||0),0);
+  const milchTotal=milchRevenueDates().reduce((s,d)=>s+milchVerkaufBetrag(d),0);
+  const expenseByKat={};
+  manualExpenses.forEach(f=>{expenseByKat[f.kategorie]=(expenseByKat[f.kategorie]||0)+(+f.betrag||0);});
+  if(einkaufTotal>0) expenseByKat.einkauf=(expenseByKat.einkauf||0)+einkaufTotal;
+  alleFixkostenKategorien().forEach(kat=>{
+    const total=fixkostenTotalForKategorie(kat);
+    if(total>0) expenseByKat[kat]=(expenseByKat[kat]||0)+total;
+  });
+  const incomeByKat={};
+  manualIncome.forEach(f=>{incomeByKat[f.kategorie]=(incomeByKat[f.kategorie]||0)+(+f.betrag||0);});
+  if(milchTotal>0) incomeByKat.milchverkauf=(incomeByKat.milchverkauf||0)+milchTotal;
+
+  const totalExpense=Object.values(expenseByKat).reduce((s,v)=>s+v,0);
+  const totalIncome=Object.values(incomeByKat).reduce((s,v)=>s+v,0);
+  const profit=totalIncome-totalExpense;
+
+  const summary=document.getElementById('finanzen-summary');
+  summary.innerHTML=[
+    ['green','📈',fmtMoney(totalIncome),t('gesamtEinnahmen')],
+    ['red','📉',fmtMoney(totalExpense),t('gesamtAusgaben')],
+    [profit>=0?'green':'red', profit>=0?'✅':'⚠️', fmtMoney(profit), t('gewinnVerlust')]
+  ].map(([cls,icon,num,label])=>'<div class="stat-card '+cls+'"><div class="stat-num" style="font-size:1.3rem">'+num+'</div><div class="stat-label">'+label+'</div><div class="stat-icon">'+icon+'</div></div>').join('');
+
+  const expColors={mitarbeiter:'var(--accent)',reparatur:'var(--gold)',tierarzt:'var(--danger)',einkauf:'var(--primary)',sonstige_ausgabe:'var(--muted)'};
+  const expOrder=['mitarbeiter','reparatur','tierarzt','einkauf','sonstige_ausgabe'];
+  const expData=expOrder.filter(k=>expenseByKat[k]>0).map(k=>({label:finanzKatLabel(k),value:expenseByKat[k],color:expColors[k]}));
+  document.getElementById('chart-ausgaben').innerHTML=svgBarChart(expData);
+
+  const incColors={milchverkauf:'var(--primary)',tierverkauf:'var(--gold)',sonstige_einnahme:'var(--muted)'};
+  const incOrder=['milchverkauf','tierverkauf','sonstige_einnahme'];
+  const incData=incOrder.filter(k=>incomeByKat[k]>0).map(k=>({label:finanzKatLabel(k),value:incomeByKat[k],color:incColors[k]}));
+  document.getElementById('chart-einnahmen').innerHTML=svgBarChart(incData);
+
+  const monatTbody=document.getElementById('monat-tbody');
+  const monate=monatsUebersicht();
+  if(!monate.length){
+    monatTbody.innerHTML='<tr><td colspan="4" class="muted">'+t('pNone')+'</td></tr>';
+  } else {
+    monatTbody.innerHTML=monate.map(m=>'<tr><td>'+fmtMonat(m.monat)+'</td><td>'+fmtMoney(m.einnahme)+'</td><td>'+fmtMoney(m.ausgabe)+'</td>'+
+      '<td><span class="chip '+(m.gewinn>=0?'green':'red')+'">'+fmtMoney(m.gewinn)+'</span></td></tr>').join('');
+  }
+
+  const tbody=document.getElementById('finanzen-tbody');
+  if(!db.finanzen.length){
+    tbody.innerHTML='<tr><td colspan="6" class="muted">'+t('noFinanzen')+'</td></tr>';
+    return;
+  }
+  const list=[...db.finanzen].sort((a,b)=>b.datum.localeCompare(a.datum));
+  tbody.innerHTML=list.map(f=>'<tr><td>'+fmtD(f.datum)+'</td><td><span class="chip '+(f.typ==='einnahme'?'green':'red')+'">'+(f.typ==='einnahme'?t('typEinnahme'):t('typAusgabe'))+'</span></td>'+
+    '<td>'+finanzKatLabel(f.kategorie)+'</td><td>'+esc(f.beschreibung||'–')+'</td><td>'+fmtMoney(f.betrag)+'</td>'+
+    '<td><button class="btn icon-btn" onclick="openFinanzForm(\''+f.id+'\')">✏️</button> <button class="btn icon-btn red" onclick="deleteFinanz(\''+f.id+'\')">🗑</button></td></tr>').join('');
+}
+function updateFinanzKatOptions(typSelect){
+  const ausgabeOpts=[['mitarbeiter',t('katMitarbeiter')],['reparatur',t('katReparatur')],['tierarzt',t('katTierarzt')],['sonstige_ausgabe',t('katSonstigeAusgabe')]];
+  const einnahmeOpts=[['tierverkauf',t('katTierverkauf')],['sonstige_einnahme',t('katSonstigeEinnahme')]];
+  const opts=typSelect.value==='einnahme'?einnahmeOpts:ausgabeOpts;
+  typSelect.form.kategorie.innerHTML=opts.map(([v,l])=>'<option value="'+v+'">'+esc(l)+'</option>').join('');
+  updateFinanzFixkostenHint(typSelect.form);
+}
+function updateFinanzFixkostenHint(form){
+  const el=document.getElementById('finanz-fixkosten-hint');
+  if(!el) return;
+  if(form.typ.value!=='ausgabe'){ el.innerHTML=''; return; }
+  const cur=currentFixkosten(form.kategorie.value);
+  el.innerHTML=cur? t('hintFixkostenAktiv',{n:fmtMoney(cur.betrag),d:fmtD(cur.von)}) : '';
+}
+function openFinanzForm(id){
+  const f=id? byId(db.finanzen,id) : {};
+  const typ=f.typ||'ausgabe';
+  const ausgabeOpts=[['mitarbeiter',t('katMitarbeiter')],['reparatur',t('katReparatur')],['tierarzt',t('katTierarzt')],['sonstige_ausgabe',t('katSonstigeAusgabe')]];
+  const einnahmeOpts=[['tierverkauf',t('katTierverkauf')],['sonstige_einnahme',t('katSonstigeEinnahme')]];
+  const katOpts=typ==='einnahme'?einnahmeOpts:ausgabeOpts;
+  const initialKat=f.kategorie||katOpts[0][0];
+  const initialFix=typ==='ausgabe'? currentFixkosten(initialKat) : null;
+  openModal('<h2>'+(id?t('fFinanzEdit'):t('fFinanzNew'))+'</h2>'+
+    '<form onsubmit="return saveFinanz(event,'+(id?'\''+id+'\'':'null')+')">'+
+    '<div class="fg">'+
+    '<div class="ff"><label>'+t('lTyp')+'</label><select name="typ" onchange="updateFinanzKatOptions(this)">'+
+      '<option value="ausgabe"'+(typ==='ausgabe'?' selected':'')+'>'+t('typAusgabe')+'</option>'+
+      '<option value="einnahme"'+(typ==='einnahme'?' selected':'')+'>'+t('typEinnahme')+'</option>'+
+    '</select></div>'+
+    fsel('kategorie',t('lKategorie'),f.kategorie||'',katOpts,true,{onchange:'updateFinanzFixkostenHint(this.form)'})+
+    '<div id="finanz-fixkosten-hint" class="hint" style="margin-top:-10px">'+(initialFix?t('hintFixkostenAktiv',{n:fmtMoney(initialFix.betrag),d:fmtD(initialFix.von)}):'')+'</div>'+
+    ff('date','datum',t('lDatum'),f.datum||todayStr(),'',true)+
+    ff('text','beschreibung',t('lBeschreibung'),f.beschreibung,'',false)+
+    ff('number','betrag',t('lBetrag'),f.betrag,'',true,{step:'0.01',min:'0'})+
+    '</div><div class="fa"><button type="button" class="btn secondary" onclick="closeModal()">'+t('cancel')+'</button><button type="submit" class="btn green">'+t('save')+'</button></div></form>');
+}
+function saveFinanz(e,id){
+  e.preventDefault(); const f=e.target;
+  const obj={id:id||uid(), typ:f.typ.value, kategorie:f.kategorie.value, datum:f.datum.value, beschreibung:f.beschreibung.value.trim(), betrag:parseFloat(f.betrag.value)||0};
+  if(id){const i=db.finanzen.findIndex(x=>x.id===id); db.finanzen[i]={...db.finanzen[i],...obj};}
+  else db.finanzen.push(obj);
+  saveDB(); renderAll(); closeModal();
+  return false;
+}
+function deleteFinanz(id){
+  if(!confirm(t('confDelFinanz')))return;
+  db.finanzen=db.finanzen.filter(x=>x.id!==id);
+  saveDB(); renderAll();
+}
+
+/* ===== PRINT PROFILES ===== */
+const besStatusLabel=()=>({durchgefuehrt:t('besDurch'),traechtig:t('besTrae'),nicht_erfolgreich:t('besNicht'),abgekalbt:t('besAbge')});
+function printTable(headers,rows){
+  if(!rows.length) return '<p>'+t('pNone')+'</p>';
+  return '<table class="pt"><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</tr>'+
+    rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table>';
+}
+function printKuhProfile(id){
+  const k=byId(db.kuehe,id); if(!k) return;
+  const statusLabel={aktiv:t('statusAktiv'),traechtig:t('statusTraechtig'),trocken:t('statusTrocken'),verkauft:t('statusVerkauft'),warte:t('statusWarte')};
+  const bes=db.besamungen.filter(b=>b.kuhId===id).sort((a,b)=>a.datum.localeCompare(b.datum));
+  const brunst=db.brunst.filter(b=>b.kuhId===id).sort((a,b)=>a.datum.localeCompare(b.datum));
+  const health=db.health.filter(h=>h.tierId===id).sort((a,b)=>a.datum.localeCompare(b.datum));
+  const milch=milchStatsForKuh(id).entries.slice(-120);
+  const kaelber=db.kaelber.filter(c=>c.mutterId===id);
+  const bsl=besStatusLabel();
+  let html='<div class="ph1">'+esc(k.name)+'</div><div class="ph2">'+t('printOn')+' '+fmtD(todayStr())+'</div>';
+  html+=printTable([t('thNr'),t('thRasse'),t('thGeb'),t('thLakt'),t('thGewicht'),t('thStatus')],
+    [[k.nr||'–',esc(k.rasse||'–'),fmtD(k.geb),k.lakt?'#'+k.lakt:'–',k.gewicht?k.gewicht+' kg':'–',statusLabel[k.status]]]);
+  if(k.notizen) html+='<p>'+esc(k.notizen)+'</p>';
+  html+='<div class="ps">'+t('printBes')+'</div>'+printTable([t('thDatum'),t('thBulle'),t('thStatus'),t('thErwKalb')],
+    bes.map(b=>[fmtD(b.datum),esc(b.bulleText||'–'),bsl[b.status]||'–',fmtD(b.erwKalb)]));
+  html+='<div class="ps">'+t('printBrunst')+'</div>'+printTable([t('thDatumBeo'),t('thNotizen')],
+    brunst.map(b=>[fmtD(b.datum),esc(b.notizen||'–')]));
+  html+='<div class="ps">'+t('printHealth')+'</div>'+printTable([t('thDatum'),t('thDiagnose'),t('thMedikament'),t('thTierarzt'),t('thNaechster')],
+    health.map(h=>[h.datumBis?(fmtD(h.datum)+' – '+fmtD(h.datumBis)):fmtD(h.datum),esc(h.diagnose||'–'),esc(h.medikament||'–'),esc(h.tierarzt||'–'),fmtD(h.naechster)]));
+  html+='<div class="ps">'+t('printMilch')+'</div>'+printTable([t('thDatum'),t('thLakt'),t('thMilch')],
+    milch.map(m=>[fmtD(m.datum),m.laktNr?'#'+m.laktNr:'–',(+m.milchKg).toFixed(1)]));
+  html+='<div class="ps">'+t('printCalves')+'</div>'+printTable([t('thName'),t('thGeb'),t('thAlter'),t('thGeschlecht')],
+    kaelber.map(c=>[esc(c.name),fmtD(c.geb),ageStr(c.geb),c.geschlecht==='w'?t('weiblich'):c.geschlecht==='m'?t('maennlich'):'–']));
+  document.getElementById('print-area').innerHTML=html;
+  window.print();
+}
+function printBulleProfile(id){
+  const b=byId(db.bullen,id); if(!b) return;
+  const bes=db.besamungen.filter(x=>x.bulleId===id).sort((a,c)=>a.datum.localeCompare(c.datum));
+  const bsl=besStatusLabel();
+  let html='<div class="ph1">'+esc(b.name)+'</div><div class="ph2">'+t('printOn')+' '+fmtD(todayStr())+'</div>';
+  html+=printTable([t('thNr'),t('thRasse')],[[b.nr||'–',esc(b.rasse||'–')]]);
+  if(b.notizen) html+='<p>'+esc(b.notizen)+'</p>';
+  html+='<div class="ps">'+t('printBes')+'</div>'+printTable([t('thKuh'),t('thDatum'),t('thStatus'),t('thErwKalb')],
+    bes.map(x=>[esc(kuhName(x.kuhId)),fmtD(x.datum),bsl[x.status]||'–',fmtD(x.erwKalb)]));
+  document.getElementById('print-area').innerHTML=html;
+  window.print();
+}
+
+/* ===== EXPORT / IMPORT ===== */
+function exportData(){
+  const blob=new Blob([JSON.stringify({...db,settings},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download='stallbuch-pro-'+todayStr()+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function handleImport(ev){
+  const file=ev.target.files[0]; if(!file)return;
+  const r=new FileReader();
+  r.onload=function(e){
+    try{
+      const p=JSON.parse(e.target.result);
+      if(!confirm(t('confImport'))){ev.target.value='';return;}
+      db={kuehe:p.kuehe||[],kaelber:p.kaelber||[],bullen:p.bullen||[],besamungen:p.besamungen||[],brunst:p.brunst||[],health:p.health||[],milch:p.milch||[],ergaenzung:p.ergaenzung||[],einkauf:p.einkauf||[],finanzen:p.finanzen||[],milchverkauf:p.milchverkauf||[],milchrate:p.milchrate||[],fixkosten:p.fixkosten||[],futterpreis:p.futterpreis||[]};
+      if(p.settings) settings=Object.assign({},settings,p.settings);
+      saveDB(); renderAll(); alert(t('importOk'));
+    }catch(err){alert(t('importErr'));}
+    ev.target.value='';
+  };
+  r.readAsText(file);
+}
+function clearAll(){
+  if(!confirm(t('confClear1')))return;
+  if(!confirm(t('confClear2')))return;
+  db={kuehe:[],kaelber:[],bullen:[],besamungen:[],brunst:[],health:[],milch:[],ergaenzung:[],einkauf:[],finanzen:[],milchverkauf:[],milchrate:[],fixkosten:[],futterpreis:[]};
+  saveDB(); renderAll();
+}
+
+/* ===== START ===== */
+(function init(){
+  try{const sl=localStorage.getItem('sb_lang'); if(sl&&SUPPORTED_LANGS.includes(sl))lang=sl;}catch(e){}
+  document.documentElement.lang=lang;
+  setupLockScreen();
+  try{if(sessionStorage.getItem(SESSION_KEY)==='1' && getPwHash())showApp();}catch(e){}
+  loadDB();
+  applyI18n();
+  updateLangBtns();
+  document.getElementById('setting-wait').value=settings.waitDays;
+  document.getElementById('setting-cycle').value=settings.cycleDays;
+  document.getElementById('setting-dry').value=settings.dryOffDays;
+  document.getElementById('setting-currency').value=settings.currency;
+  document.getElementById('setting-milchpreis').value=settings.milchpreis;
+  renderAll();
+})();
+</script>
+</body>
+</html>
