@@ -9,6 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Stallbuch Pro">
+<link rel="manifest" href="manifest-stallbuch.json">
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw-stallbuch.js').catch(()=>{});});}</script>
 <style>
 :root{
   --bg:#F0F5EE;
