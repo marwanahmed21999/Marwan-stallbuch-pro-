@@ -499,6 +499,17 @@ footer.af{text-align:center; padding:20px; font-size:.73rem; color:var(--muted);
   </div>
 
   <div class="stat-grid" id="einkauf-summary" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));"></div>
+
+  <div class="panel-header"><h3 style="margin:0" data-i18n="einkaufMonatTitle">Einkäufe pro Monat</h3>
+    <button class="btn secondary sm" onclick="printEinkaufMonat()">🖨️ <span data-i18n="print">Drucken</span></button>
+  </div>
+  <div class="table-wrap" style="margin-bottom:22px;">
+    <table>
+      <thead><tr><th data-i18n="thMonat">Monat</th><th data-i18n="thArtikel">Artikel</th><th data-i18n="thGesamt">Gesamt</th></tr></thead>
+      <tbody id="einkauf-monat-tbody"></tbody>
+    </table>
+  </div>
+
   <div class="table-wrap">
     <table>
       <thead><tr><th data-i18n="thDatum">Datum</th><th data-i18n="thArtikel">Artikel</th><th data-i18n="thMenge">Menge</th><th data-i18n="thEinheit">Einheit</th><th data-i18n="thPreis">Preis</th><th data-i18n="thPreisEinheit">Preis/Einheit</th><th></th></tr></thead>
@@ -548,6 +559,16 @@ footer.af{text-align:center; padding:20px; font-size:.73rem; color:var(--muted);
     <table>
       <thead><tr><th data-i18n="thKategorie">Kategorie</th><th data-i18n="thBetragProMonat">Betrag/Monat</th><th data-i18n="thSeitMonat">Seit</th><th></th></tr></thead>
       <tbody id="fixkosten-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="panel-header"><h3 style="margin:0">🥛 <span data-i18n="milchMonatTitle">Milch pro Monat</span></h3>
+    <button class="btn secondary sm" onclick="printMilchMonat()">🖨️ <span data-i18n="print">Drucken</span></button>
+  </div>
+  <div class="table-wrap" style="margin-bottom:22px;">
+    <table>
+      <thead><tr><th data-i18n="thMonat">Monat</th><th data-i18n="thMilchmenge">Menge (kg)</th><th data-i18n="thUmsatz">Umsatz</th></tr></thead>
+      <tbody id="milch-monat-tbody"></tbody>
     </table>
   </div>
 
@@ -723,6 +744,7 @@ de:{
   lErgStart:'Startdatum', lErgDauer:'Gabe (Tage)', lErgPause:'Pause (Tage)', hintErgPause:'Nach Ablauf der Pause zeigt die App automatisch wieder "Wird gegeben" an.',
   confDelErgaenzung:'Ergänzung löschen?',
   einkaufTitle:'Einkäufe', addEinkauf:'Einkauf eintragen', einkaufTotal:'Gesamt',
+  einkaufMonatTitle:'Einkäufe pro Monat', thAnzahl:'Anzahl', thGesamt:'Gesamt',
   thArtikel:'Artikel', thMenge:'Menge', thEinheit:'Einheit', thPreis:'Preis', thPreisEinheit:'Preis/Einheit',
   noEinkauf:'Noch keine Einkäufe eingetragen.', fEinkaufNew:'Einkauf eintragen', fEinkaufEdit:'Einkauf bearbeiten',
   lArtikel:'Artikel', lMenge:'Menge', lEinheit:'Einheit (z.B. kg, Liter, Sack)', lPreis:'Preis (gesamt)',
@@ -745,6 +767,7 @@ de:{
   settingMilchpreisLabel:'Milchpreis pro kg', settingMilchpreisSub:'Für automatische Berechnung des Milchverkaufs',
   monatTitle:'Monatsübersicht', thMonat:'Monat', thEinnahmenKurz:'Einnahmen', thAusgabenKurz:'Ausgaben', thGewinn:'Gewinn/Verlust',
   milchverkaufTitle:'Täglicher Milchverkauf', milchverkaufInfo:'Wird automatisch aus der konstanten Milchmenge (Tab „Milch") und dem Milchpreis (Einstellungen) berechnet. War es an einem Tag mehr oder weniger, kannst du den Betrag mit ✏️ manuell anpassen.',
+  milchMonatTitle:'Milch pro Monat', thUmsatz:'Umsatz',
   thMilchmenge:'Menge (kg)', thBerechnet:'Berechnet', thTatsaechlich:'Tatsächlich', buchungenTitle:'Manuelle Buchungen', noMilchverkauf:'Noch keine Milchmenge erfasst.',
   fMilchverkaufEdit:'Milchverkauf anpassen', lMilchmenge:'Milchmenge', lTatsaechlicherBetrag:'Tatsächlicher Betrag',
   hintMilchBetrag:'Automatisch berechnet aus Menge × Milchpreis. Bei Bedarf anpassen.', btnAutoBerechnen:'Automatisch berechnen',
@@ -843,6 +866,7 @@ en:{
   lErgStart:'Start date', lErgDauer:'Active (days)', lErgPause:'Pause (days)', hintErgPause:'After the pause ends, the app automatically shows "Active" again.',
   confDelErgaenzung:'Delete supplement?',
   einkaufTitle:'Purchases', addEinkauf:'Log purchase', einkaufTotal:'Total',
+  einkaufMonatTitle:'Purchases per month', thAnzahl:'Count', thGesamt:'Total',
   thArtikel:'Item', thMenge:'Quantity', thEinheit:'Unit', thPreis:'Price', thPreisEinheit:'Price/Unit',
   noEinkauf:'No purchases logged yet.', fEinkaufNew:'Log purchase', fEinkaufEdit:'Edit purchase',
   lArtikel:'Item', lMenge:'Quantity', lEinheit:'Unit (e.g. kg, liter, bag)', lPreis:'Price (total)',
@@ -865,6 +889,7 @@ en:{
   settingMilchpreisLabel:'Milk price per kg', settingMilchpreisSub:'For automatic calculation of milk sales',
   monatTitle:'Monthly overview', thMonat:'Month', thEinnahmenKurz:'Income', thAusgabenKurz:'Expenses', thGewinn:'Profit/Loss',
   milchverkaufTitle:'Daily milk sales', milchverkaufInfo:'Automatically calculated from the constant milk amount (tab "Milk") and the milk price (Settings). If a day sold more or less, adjust the amount with ✏️.',
+  milchMonatTitle:'Milk per month', thUmsatz:'Revenue',
   thMilchmenge:'Amount (kg)', thBerechnet:'Calculated', thTatsaechlich:'Actual', buchungenTitle:'Manual entries', noMilchverkauf:'No milk amounts logged yet.',
   fMilchverkaufEdit:'Adjust milk sale', lMilchmenge:'Milk amount', lTatsaechlicherBetrag:'Actual amount',
   hintMilchBetrag:'Automatically calculated from amount × milk price. Adjust if needed.', btnAutoBerechnen:'Calculate automatically',
@@ -963,6 +988,7 @@ so:{
   lErgStart:'Taariikhda Bilowga', lErgDauer:'Bixinta (maalmood)', lErgPause:'Nasashada (maalmood)', hintErgPause:'Marka nasashadu dhamaato, app-ku wuxuu si otomaatig ah u tusi doonaa "Waa la siinayaa" mar kale.',
   confDelErgaenzung:'Kaydka tirtir?',
   einkaufTitle:'Iibsiga', addEinkauf:'Diiwaan geli iibsiga', einkaufTotal:'Wadarta',
+  einkaufMonatTitle:'Iibsiga Bil kasta', thAnzahl:'Tirada', thGesamt:'Wadarta',
   thArtikel:'Alaabta', thMenge:'Qadarka', thEinheit:'Cabbirka', thPreis:'Qiimaha', thPreisEinheit:'Qiimaha/Cabbirka',
   noEinkauf:'Iibsi weli lama diiwaan gelin.', fEinkaufNew:'Diiwaan geli iibsiga', fEinkaufEdit:'Wax ka beddel iibsiga',
   lArtikel:'Alaabta', lMenge:'Qadarka', lEinheit:'Cabbirka (tusaale kg, litir, kiish)', lPreis:'Qiimaha (guud)',
@@ -985,6 +1011,7 @@ so:{
   settingMilchpreisLabel:'Qiimaha Caanaha kg', settingMilchpreisSub:'Loogu talagalay xisaabinta otomaatig ee iibinta caanaha',
   monatTitle:'Guud-mar Bishii', thMonat:'Bisha', thEinnahmenKurz:'Dakhliga', thAusgabenKurz:'Kharashka', thGewinn:'Faa iido/Khasaare',
   milchverkaufTitle:'Iibinta Caanaha Maalinlaha', milchverkaufInfo:'Si otomaatig ah ayaa looga xisaabiyaa xaddiga caanaha ee joogtada ah (tab-ka "Caano") iyo qiimaha caanaha (Dejinta). Haddii maalin la iibiyay wax ka badan ama ka yar, waxaad ku beddeli kartaa qadarka adigoo riixaya ✏️.',
+  milchMonatTitle:'Caanaha Bil kasta', thUmsatz:'Dakhliga',
   thMilchmenge:'Xaddiga (kg)', thBerechnet:'La Xisaabiyay', thTatsaechlich:'Dhabta ah', buchungenTitle:'Diiwaanka Gacanta', noMilchverkauf:'Weli xaddig caano ah lama diiwaan gelin.',
   fMilchverkaufEdit:'Wax ka beddel Iibinta Caanaha', lMilchmenge:'Xaddiga Caanaha', lTatsaechlicherBetrag:'Qadarka Dhabta ah',
   hintMilchBetrag:'Si otomaatig ah ayaa looga xisaabiyaa xaddiga × qiimaha caanaha. Haddii loo baahdo wax ka beddel.', btnAutoBerechnen:'Si otomaatig ah u xisaabi',
@@ -1083,6 +1110,7 @@ am:{
   lErgStart:'የመጀመሪያ ቀን', lErgDauer:'አሰጣጥ (ቀናት)', lErgPause:'እረፍት (ቀናት)', hintErgPause:'እረፍቱ ካለቀ በኋላ መተግበሪያው በራስ-ሰር እንደገና "እየተሰጠ ነው" ያሳያል.',
   confDelErgaenzung:'ተጨማሪ ምግብ ይሰረዝ?',
   einkaufTitle:'ግዢዎች', addEinkauf:'ግዢ መዝግብ', einkaufTotal:'ጠቅላላ',
+  einkaufMonatTitle:'ግዢዎች በወር', thAnzahl:'ብዛት', thGesamt:'ጠቅላላ',
   thArtikel:'እቃ', thMenge:'መጠን', thEinheit:'መለኪያ', thPreis:'ዋጋ', thPreisEinheit:'ዋጋ/መለኪያ',
   noEinkauf:'እስካሁን ግዢ አልተመዘገበም.', fEinkaufNew:'ግዢ መዝግብ', fEinkaufEdit:'ግዢ አስተካክል',
   lArtikel:'እቃ', lMenge:'መጠን', lEinheit:'መለኪያ (ለምሳሌ ኪግ፣ ሊትር፣ ከረጢት)', lPreis:'ዋጋ (ጠቅላላ)',
@@ -1105,6 +1133,7 @@ am:{
   settingMilchpreisLabel:'የወተት ዋጋ በኪግ', settingMilchpreisSub:'ለወተት ሽያጭ ራስ-ሰር ስሌት',
   monatTitle:'ወርሃዊ አጠቃላይ እይታ', thMonat:'ወር', thEinnahmenKurz:'ገቢ', thAusgabenKurz:'ወጪ', thGewinn:'ትርፍ/ኪሳራ',
   milchverkaufTitle:'የዕለት ወተት ሽያጭ', milchverkaufInfo:'ከቋሚው የወተት መጠን (ትር "ወተት") እና ከወተት ዋጋ (ቅንብሮች) በራስ-ሰር ይሰላል። በአንድ ቀን የበለጠ ወይም ያነሰ ከተሸጠ በ✏️ መጠኑን ማስተካከል ይችላሉ።',
+  milchMonatTitle:'ወተት በወር', thUmsatz:'ገቢ',
   thMilchmenge:'መጠን (ኪግ)', thBerechnet:'የተሰላ', thTatsaechlich:'ትክክለኛ', buchungenTitle:'በእጅ የተመዘገቡ', noMilchverkauf:'እስካሁን የወተት መጠን አልተመዘገበም.',
   fMilchverkaufEdit:'የወተት ሽያጭ አስተካክል', lMilchmenge:'የወተት መጠን', lTatsaechlicherBetrag:'ትክክለኛ መጠን',
   hintMilchBetrag:'ከመጠን × የወተት ዋጋ በራስ-ሰር ይሰላል። አስፈላጊ ከሆነ ያስተካክሉ.', btnAutoBerechnen:'በራስ-ሰር ስላ',
@@ -1982,6 +2011,31 @@ function deleteErgaenzung(id){
 }
 
 /* ===== EINKÄUFE ===== */
+function einkaufMonatsUebersicht(){
+  const byMonat={};
+  db.einkauf.forEach(x=>{
+    if(!x.datum) return;
+    const m=x.datum.slice(0,7);
+    if(!byMonat[m]) byMonat[m]={anzahl:0,betrag:0,byArtikel:{}};
+    byMonat[m].anzahl+=1;
+    byMonat[m].betrag+=(+x.preis||0);
+    byMonat[m].byArtikel[x.artikel]=(byMonat[m].byArtikel[x.artikel]||0)+(+x.preis||0);
+  });
+  return Object.entries(byMonat).map(([monat,v])=>({monat,...v})).sort((a,b)=>b.monat.localeCompare(a.monat));
+}
+function printEinkaufMonat(){
+  const monate=einkaufMonatsUebersicht();
+  let html='<div class="ph1">'+esc(t('einkaufMonatTitle'))+'</div><div class="ph2">'+t('printOn')+' '+fmtD(todayStr())+'</div>';
+  monate.forEach(m=>{
+    const rows=db.einkauf.filter(x=>x.datum.slice(0,7)===m.monat).sort((a,b)=>a.datum.localeCompare(b.datum))
+      .map(x=>[fmtD(x.datum),esc(x.artikel),x.menge+' '+esc(x.einheit),fmtMoney(x.preis)]);
+    html+='<div class="ps">'+esc(fmtMonat(m.monat))+' – '+t('thGesamt')+': '+fmtMoney(m.betrag)+'</div>'+
+      printTable([t('thDatum'),t('thArtikel'),t('thMenge'),t('thPreis')],rows);
+  });
+  if(!monate.length) html+='<p>'+t('pNone')+'</p>';
+  document.getElementById('print-area').innerHTML=html;
+  window.print();
+}
 function renderEinkauf(){
   renderFutterpreis();
   const summary=document.getElementById('einkauf-summary');
@@ -1992,6 +2046,13 @@ function renderEinkauf(){
     Object.entries(byArtikel).map(([art,sum])=>['','📦',fmtMoney(sum),art])
   );
   summary.innerHTML=cardsData.map(([cls,icon,num,label])=>'<div class="stat-card '+cls+'"><div class="stat-num" style="font-size:1.3rem">'+num+'</div><div class="stat-label">'+esc(label)+'</div><div class="stat-icon">'+icon+'</div></div>').join('');
+
+  const monatTbody=document.getElementById('einkauf-monat-tbody');
+  const monate=einkaufMonatsUebersicht();
+  monatTbody.innerHTML=monate.length? monate.map(m=>{
+    const items=Object.entries(m.byArtikel).map(([art,sum])=>esc(art)+': '+fmtMoney(sum)).join(', ');
+    return '<tr><td>'+fmtMonat(m.monat)+'</td><td style="font-size:.82rem">'+items+'</td><td><b>'+fmtMoney(m.betrag)+'</b></td></tr>';
+  }).join('') : '<tr><td colspan="3" class="muted">'+t('pNone')+'</td></tr>';
 
   const tbody=document.getElementById('einkauf-tbody');
   if(!db.einkauf.length){
@@ -2173,7 +2234,28 @@ function milchVerkaufBetrag(datum){
   if(override) return +override.betrag||0;
   return milchKgForDate(datum)*(+settings.milchpreis||0);
 }
+function milchMonatsUebersicht(){
+  const byMonat={};
+  milchRevenueDates().forEach(d=>{
+    const m=d.slice(0,7);
+    if(!byMonat[m]) byMonat[m]={kg:0,betrag:0};
+    byMonat[m].kg+=milchKgForDate(d);
+    byMonat[m].betrag+=milchVerkaufBetrag(d);
+  });
+  return Object.entries(byMonat).map(([monat,v])=>({monat,...v})).sort((a,b)=>b.monat.localeCompare(a.monat));
+}
+function printMilchMonat(){
+  const monate=milchMonatsUebersicht();
+  let html='<div class="ph1">'+esc(t('milchMonatTitle'))+'</div><div class="ph2">'+t('printOn')+' '+fmtD(todayStr())+'</div>';
+  html+=printTable([t('thMonat'),t('thMilchmenge'),t('thUmsatz')],monate.map(m=>[esc(fmtMonat(m.monat)),m.kg.toFixed(1),fmtMoney(m.betrag)]));
+  document.getElementById('print-area').innerHTML=html;
+  window.print();
+}
 function renderMilchverkauf(){
+  const monatTbody=document.getElementById('milch-monat-tbody');
+  const monate=milchMonatsUebersicht();
+  monatTbody.innerHTML=monate.length? monate.map(m=>'<tr><td>'+fmtMonat(m.monat)+'</td><td>'+m.kg.toFixed(1)+'</td><td>'+fmtMoney(m.betrag)+'</td></tr>').join('') : '<tr><td colspan="3" class="muted">'+t('pNone')+'</td></tr>';
+
   const tbody=document.getElementById('milchverkauf-tbody');
   const dates=milchRevenueDates();
   if(!dates.length){
