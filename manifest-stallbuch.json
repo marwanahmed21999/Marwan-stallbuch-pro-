@@ -1,0 +1,9 @@
+{
+  "name": "Stallbuch Pro",
+  "short_name": "Stallbuch Pro",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F0F5EE",
+  "theme_color": "#2F6B4F"
+}
